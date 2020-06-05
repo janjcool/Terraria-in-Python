@@ -4,49 +4,69 @@ import random
 pygame.init()
 
 def handle_events(events, quit_rect, test_rect):
+    handle_events_dict = {}
+    no_movement = False
+    no_ctrl = False
+    
     for event in events:
         if event.type == pygame.QUIT:
-            return {'exit': True}
+            handle_events_dict['exit'] = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
                 # 1 is the left mouse button, 2 is middle, 3 is right.
                 if event.button == 1:
                     # `event.pos` is the mouse position.
                     if quit_rect.collidepoint(event.pos):
-                        print("exit")
-                        return {'exit': True}
+                        handle_events_dict['exit'] = True
                     if test_rect.collidepoint(event.pos):
-                        print("test")
-                        print("mouse pos:" + str(event.pos))
-                        return {'test': True}
+                        handle_events_dict['test'] = True
                         
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
-                return {'w_down': True}
+                handle_events_dict['w_down'] = True
+                no_movement = True
             elif event.key == pygame.K_s:
-                return {'s_down': True}
+                handle_events_dict['s_down'] = True
+                no_movement = True
             elif event.key == pygame.K_a:
-                return {'a_down': True}
+                handle_events_dict['a_down'] = True
+                no_movement = True
             elif event.key == pygame.K_d:
-                return {'d_down': True}
+                handle_events_dict['d_down'] = True
+                no_movement = True
 
             elif event.key == pygame.K_ESCAPE:
-                # Exit the game
-                print("exit")
-                return {'exit': True}
+                handle_events_dict['exit'] = True
+            
+            elif event.key == 1073742048:
+                handle_events_dict['ctrl_down'] = True
+                no_ctrl = True
     
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_w:
-                return {'w_down': False}
+                handle_events_dict['w_down'] = False
+                no_movement = True
             elif event.key == pygame.K_s:
-                return {'s_down': False}
+                handle_events_dict['s_down'] = False
+                no_movement = True
             elif event.key == pygame.K_a:
-                return {'a_down': False}
+                handle_events_dict['a_down'] = False
+                no_movement = True
             elif event.key == pygame.K_d:
-                return {'d_down': False}
-        return {'event_happened': False}    
-    return {'event_happened': False}
+                handle_events_dict['d_down'] = False
+                no_movement = True
+            elif event.key == 1073742048:
+                handle_events_dict['ctrl_down'] = False
+                no_ctrl = True
+        
+    if no_movement != True:
+        handle_events_dict['movement_event_happened'] = False
+        
+    if no_ctrl != True:
+        handle_events_dict['ctrl_event_happened'] = False
+    
+    return handle_events_dict
 
-def rects_render(gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y, player_speed, deltatime, unsolid_moverect_list, solid_moverect_list, player_rect, UI_rects, gravity):
+def rects_render(gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y, player_speed, deltatime, unsolid_moverect_list, solid_moverect_list, player_rect, UI_rects, gravity, ctrl_down, schale, player_sprite, width, height):
     player_x = 0
     player_y = 0
     player_movement_allow = True
@@ -67,6 +87,10 @@ def rects_render(gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y
         player_x -= 1 * player_speed
     elif d_down:
         player_x += 1 * player_speed
+        
+    if ctrl_down:
+        player_rect.height -= 32
+        player_rect.top += 32
 
     #look if you can add gravity
     for y in solid_moverect_list:
@@ -129,13 +153,20 @@ def rects_render(gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y
     pygame.draw.rect(gameDisplay, BLUE, unsolid_moverect_list[6])
     pygame.draw.rect(gameDisplay, (122, 84, 38), unsolid_moverect_list[0])
     pygame.draw.rect(gameDisplay, (107, 58, 22), solid_moverect_list[1])
+    
+    #debugging level
+    pygame.draw.rect(gameDisplay, GREEN, player_rect)      #enable for player collider
+    
+    #player
+    gameDisplay.blit(player_sprite, (width/2-32, height/2-32))
 
     #ui level
     pygame.draw.rect(gameDisplay, (33, 33, 33), UI_rects[1])
     pygame.draw.rect(gameDisplay, (23, 23, 23), UI_rects[0])
 
-    #debugging level
-    #pygame.draw.rect(gameDisplay, GREEN, player_rect)      #enable for player collider
+    if ctrl_down:
+        player_rect.height += 32
+        player_rect.top -= 32
 
 
 def main():
@@ -170,7 +201,6 @@ def main():
     clock = pygame.time.Clock()
 
     mainloop = True
-    event_happened = True
 
     player_sprite = pygame.image.load("man with sword and shield.png")
     player_sprite = pygame.transform.scale(player_sprite, (32 * schale, 32 * schale))
@@ -193,7 +223,7 @@ def main():
     solid_moverect_list = [grass_rect, wall_rect, dirt_rect]
     UI_rects = [quit_rect, test_rect]
 
-    w_down, s_down, a_down, d_down = False, False, False, False
+    w_down, s_down, a_down, d_down, ctrl_down = False, False, False, False, False
 
     while mainloop:
         events = pygame.event.get()
@@ -201,11 +231,15 @@ def main():
         action = handle_events(events, quit_rect, test_rect)
 
         exit = action.get('exit')
-        tmep_event_happened = action.get('event_happened')
+        movement_event_happened = action.get('movement_event_happened')
+        ctrl_event_happened = action.get('ctrl_event_happened')
         testPressed = action.get('test')
         
-        if tmep_event_happened != False:
+        if movement_event_happened != False:
             w_down, s_down, a_down, d_down = action.get('w_down'), action.get('s_down'), action.get('a_down'), action.get('d_down')
+            
+        if ctrl_event_happened != False:
+            ctrl_down = action.get('ctrl_down')
 
         if exit:
             return True
@@ -215,9 +249,8 @@ def main():
 
         gameDisplay.fill(GRAY)
 
-        rects_render(gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y, player_speed, deltatime, unsolid_moverect_list, solid_moverect_list, player_rect, UI_rects, gravity)
-
-        gameDisplay.blit(player_sprite, (width/2-32, height/2-32))
+        rects_render(gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y, player_speed, deltatime, unsolid_moverect_list, solid_moverect_list, player_rect, UI_rects, gravity, ctrl_down, schale, player_sprite, width, height)
+        
         gameDisplay.blit(font30.render('quit', True, WHITE), (width-60, 10))
 
         pygame.display.update()
