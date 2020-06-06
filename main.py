@@ -66,11 +66,12 @@ def handle_events(events, quit_rect, test_rect):
     
     return handle_events_dict
 
-def rects_render(gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y, player_speed, deltatime, unsolid_moverect_list, solid_moverect_list, player_rect, UI_rects, gravity, ctrl_down, schale, player_sprite, width, height):
+def rects_render(background_list, gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y, player_speed, deltatime, unsolid_moverect_list, solid_moverect_list, player_rect, UI_rects, gravity, ctrl_down, schale, player_sprite, width, height):
     player_x = 0
     player_y = 0
     player_movement_allow = True
     gravity_movement_allow = True
+    one_pixel_movement_allow = True
     in_block = False
 
     WHITE = (255, 255, 255)
@@ -91,13 +92,13 @@ def rects_render(gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y
     if ctrl_down:
         player_rect.height -= 32
         player_rect.top += 32
-
+    
     #look if you can add gravity
     for y in solid_moverect_list:
-        y.top -= gravity +1
+        y.top -= gravity
         if player_rect.colliderect(y) == True:
             gravity_movement_allow = False
-        y.top += gravity +1
+        y.top += gravity
 
     #add gravity
     if gravity_movement_allow == True:
@@ -107,38 +108,54 @@ def rects_render(gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y
             x.top -= gravity
     
     #look if you can add button movement
-    for y in solid_moverect_list:
-        y.top -= player_y
-        y.left -= player_x
-        if player_rect.colliderect(y) == True:
+    for rect in solid_moverect_list:
+        rect.top -= player_y
+        rect.left -= player_x
+        if player_rect.colliderect(rect) == True:
             player_movement_allow = False
-        y.top += player_y
-        y.left += player_x
+        rect.top += player_y
+        rect.left += player_x
 
     #add button movement
     if player_x != 0 or player_y != 0:
         if player_movement_allow == True:
-            for y in solid_moverect_list:
-                y.top -= player_y
-                y.left -= player_x
-            for x in unsolid_moverect_list:
-                x.top -= player_y
-                x.left -= player_x
-
-    #look if your in a block
+            for rect in solid_moverect_list:
+                rect.top -= player_y
+                rect.left -= player_x
+            for rect in unsolid_moverect_list:
+                rect.top -= player_y
+                rect.left -= player_x
+    
+    #look if you can add 1 pixel down
     for y in solid_moverect_list:
+        y.top -= 1
         if player_rect.colliderect(y) == True:
-            in_block = True
+            one_pixel_movement_allow = False
+        y.top += 1
 
+    #add 1 pixel down
+    if gravity_movement_allow != True:
+        if one_pixel_movement_allow == True:
+            for y in solid_moverect_list:
+                y.top -= 1
+            for x in unsolid_moverect_list:
+                x.top -= 1
+    
+    #look if your in a block
+    for rect in solid_moverect_list:
+        if player_rect.colliderect(rect) == True:
+            in_block = True
+    
     #push you up if your stuck in a block
     if in_block == True:
         print("stuck")
-        for y in solid_moverect_list:
-            y.top += gravity
-        for x in unsolid_moverect_list:
-            x.top += gravity
+        for rect in solid_moverect_list:
+            rect.top += gravity
+        for rect in unsolid_moverect_list:
+            rect.top += gravity
     
     #background
+    gameDisplay.blit(background_list[0], (0, 0))
 
     #floor
     pygame.draw.rect(gameDisplay, (16, 89, 15), solid_moverect_list[0])
@@ -158,7 +175,7 @@ def rects_render(gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y
     pygame.draw.rect(gameDisplay, GREEN, player_rect)      #enable for player collider
     
     #player
-    gameDisplay.blit(player_sprite, (width/2-32, height/2-32))
+    gameDisplay.blit(player_sprite, (int(width/2-32), int(height/2-32)))
 
     #ui level
     pygame.draw.rect(gameDisplay, (33, 33, 33), UI_rects[1])
@@ -174,7 +191,7 @@ def main():
     height = 700 #16*30
     fps = 60
     schale = 2
-    deltatime = 1 #don't chanche this
+    character_bigness = 2
     world_seed = random.randint(1, 9999999999)
 
     player_x = 0
@@ -197,20 +214,20 @@ def main():
 
     #seed of opensimplex noise (like perlin noise)
     tmp = OpenSimplex(seed=1)
-
     clock = pygame.time.Clock()
 
-    mainloop = True
-
     player_sprite = pygame.image.load("man with sword and shield.png")
-    player_sprite = pygame.transform.scale(player_sprite, (32 * schale, 32 * schale))
+    player_sprite = pygame.transform.scale(player_sprite, (32 * character_bigness, 32 * character_bigness))
+    
+    wallpaper = pygame.image.load("background.png")
+    wallpaper = pygame.transform.scale(wallpaper, (width, height))
 
     quit_rect = pygame.Rect(width-80, 0, 80, 60)
     test_rect = pygame.Rect(0, 0, 100, 100)
     grass_rect = pygame.Rect(0, height-50, width, 100)
     tree_rect = pygame.Rect(80, height-90, 20, 60)
     leafs_rect = pygame.Rect(70, height-130, 40, 40)
-    player_rect = pygame.Rect(width/2-27, height/2-30, 45, 62)
+    player_rect = pygame.Rect(int(width/2-27), int(height/2-30), 45, 62)
     wall_rect = pygame.Rect(width-50, height-100, 10, 50)
     tree2_rect = pygame.Rect(80+200, height-90, 20, 60)
     leafs2_rect = pygame.Rect(70+200, height-130, 40, 40)
@@ -222,9 +239,12 @@ def main():
     unsolid_moverect_list = [tree_rect, leafs_rect, tree2_rect, leafs2_rect, cloud1_rect, cloud2_rect, cloud3_rect]
     solid_moverect_list = [grass_rect, wall_rect, dirt_rect]
     UI_rects = [quit_rect, test_rect]
+    background_list = [wallpaper]
 
     w_down, s_down, a_down, d_down, ctrl_down = False, False, False, False, False
-
+    deltatime = 0 #don't chanche this
+    mainloop = True
+    
     while mainloop:
         events = pygame.event.get()
         mouse = pygame.mouse.get_pos()
@@ -245,11 +265,11 @@ def main():
             return True
         
         if testPressed:
-            print("player_pos:" + str(player_rect) + 'ground pos:' + str(ground_rect))
+            print("test button")
 
         gameDisplay.fill(GRAY)
 
-        rects_render(gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y, player_speed, deltatime, unsolid_moverect_list, solid_moverect_list, player_rect, UI_rects, gravity, ctrl_down, schale, player_sprite, width, height)
+        rects_render(background_list, gameDisplay, w_down, s_down, a_down, d_down, player_x, player_y, player_speed, deltatime, unsolid_moverect_list, solid_moverect_list, player_rect, UI_rects, gravity, ctrl_down, schale, player_sprite, width, height)
         
         gameDisplay.blit(font30.render('quit', True, WHITE), (width-60, 10))
 
