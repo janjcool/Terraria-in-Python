@@ -74,11 +74,17 @@ def handle_events(events, quit_rect, test_rect):
     
     return handle_events_dict
 
+def player_animation(animtion_list, speed):
+    if temp_timer:
+        print("it exists")
+    else:
+        print("begin animation timer")
+        temp_timer = 0
+
 def main():
     width = 1000 #16*50
     height = 700 #16*30
     fps = 60
-    schale = 2
     character_bigness = 2
     player_speed = 5
     gravity = 5
@@ -101,8 +107,8 @@ def main():
     tmp = OpenSimplex(seed=1)
     clock = pygame.time.Clock()
 
-    player_sprite = pygame.image.load("man with sword and shield.png")
-    player_sprite = pygame.transform.scale(player_sprite, (32 * character_bigness, 32 * character_bigness))
+    player_sprite = pygame.image.load("art-assets/player/sprites/adventurer-idle-00.png")
+    player_sprite = pygame.transform.scale(player_sprite, (50 * character_bigness, 37 * character_bigness))
     
     wallpaper = pygame.image.load("background.png")
     wallpaper = pygame.transform.scale(wallpaper, (width, height))
@@ -112,7 +118,7 @@ def main():
     grass_rect = pygame.Rect(0, height-50, width, 100)
     tree_rect = pygame.Rect(80, height-90, 20, 60)
     leafs_rect = pygame.Rect(70, height-130, 40, 40)
-    player_rect = pygame.Rect(int(width/2-27), int(height/2-30), 45, 62)
+    player_rect = pygame.Rect(int(width/2-4), int(height/2-18), 38, 58)
     wall_rect = pygame.Rect(width-50, height-100, 10, 50)
     tree2_rect = pygame.Rect(80+200, height-90, 20, 60)
     leafs2_rect = pygame.Rect(70+200, height-130, 40, 40)
