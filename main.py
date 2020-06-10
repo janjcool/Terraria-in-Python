@@ -1,6 +1,7 @@
 from opensimplex import OpenSimplex
 import pygame
 import random
+import sprint-loader
 pygame.init()
 
 def handle_events(events, quit_rect, test_rect):
@@ -74,12 +75,32 @@ def handle_events(events, quit_rect, test_rect):
     
     return handle_events_dict
 
-def player_animation(animtion_list, speed):
+def player_animation(animation_list, animation_repeat):
     if temp_timer:
-        print("it exists")
+        do_next_animation == False
+        
+        if temp_timer == animation_repeat:
+            do_next_animation = True
+        else:
+            temp_timer += 1
+
     else:
-        print("begin animation timer")
+        print("begin timer for player_animation function")
         temp_timer = 0
+    
+    if do_next_animation == True:
+        items_in_list = len(animation_list)
+        if temp_animation_counter:
+            if temp_animation_counter == items_in_list+1:
+                temp_animation_counter == 0
+            else:
+                temp_animation_counter += 1
+        else:
+            print("begin animation image counter")
+            temp_animation_counter = 0
+        
+        return animation_list[temp_animation_counter]
+        
 
 def main():
     width = 1000 #16*50
@@ -107,8 +128,7 @@ def main():
     tmp = OpenSimplex(seed=1)
     clock = pygame.time.Clock()
 
-    player_sprite = pygame.image.load("art-assets/player/sprites/adventurer-idle-00.png")
-    player_sprite = pygame.transform.scale(player_sprite, (50 * character_bigness, 37 * character_bigness))
+    player_sprite_idle_00 = pygame.image.load("art-assets/player/sprites/adventurer-idle-00.png")
     
     wallpaper = pygame.image.load("background.png")
     wallpaper = pygame.transform.scale(wallpaper, (width, height))
