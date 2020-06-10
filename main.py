@@ -1,7 +1,7 @@
 from opensimplex import OpenSimplex
 import pygame
 import random
-import sprint-loader
+import sprintLoader
 pygame.init()
 
 def handle_events(events, quit_rect, test_rect):
@@ -162,6 +162,8 @@ def main():
     first_frame = True
     temp_jump_lenght = 0
     can_jump = True
+    
+    print(sprintLoader.player_animation_list(idle, 2, 2))
     
     while mainloop:
         events = pygame.event.get()
