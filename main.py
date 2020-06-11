@@ -73,42 +73,16 @@ def handle_events(events, quit_rect, test_rect):
     if no_space != True:
         handle_events_dict['space_event_happened'] = False
     
-    return handle_events_dict
-
-def player_animation(animation_list, animation_repeat):
-    if temp_timer:
-        do_next_animation == False
+    return handle_events_dict    
         
-        if temp_timer == animation_repeat:
-            do_next_animation = True
-        else:
-            temp_timer += 1
-
-    else:
-        print("begin timer for player_animation function")
-        temp_timer = 0
-    
-    if do_next_animation == True:
-        items_in_list = len(animation_list)
-        if temp_animation_counter:
-            if temp_animation_counter == items_in_list+1:
-                temp_animation_counter == 0
-            else:
-                temp_animation_counter += 1
-        else:
-            print("begin animation image counter")
-            temp_animation_counter = 0
-        
-        return animation_list[temp_animation_counter]
-        
-
 def main():
-    width = 1000 #16*50
-    height = 700 #16*30
-    fps = 60
-    character_bigness = 2
-    player_speed = 5
-    gravity = 5
+    width = 1000 #in pixels (best mulipley by 16)
+    height = 700 #in pixels (best mulipley by 16)
+    fps = 60 #frames per second
+    character_bigness = 2.5 #how big your character is
+    player_speed = 5 #how many pixels you move
+    gravity = 5 #how many pixels you go down
+    player_animation_speed = 15 #after how many frames the next idle animation comes
     jump_lenght = 20 #how many frames you jump
     jump_speed = 30 #pixel you jump per second
 
@@ -127,8 +101,6 @@ def main():
     #seed of opensimplex noise (like perlin noise)
     tmp = OpenSimplex(seed=1)
     clock = pygame.time.Clock()
-
-    player_sprite_idle_00 = pygame.image.load("art-assets/player/sprites/adventurer-idle-00.png")
     
     wallpaper = pygame.image.load("background.png")
     wallpaper = pygame.transform.scale(wallpaper, (width, height))
@@ -138,14 +110,14 @@ def main():
     grass_rect = pygame.Rect(0, height-50, width, 100)
     tree_rect = pygame.Rect(80, height-90, 20, 60)
     leafs_rect = pygame.Rect(70, height-130, 40, 40)
-    player_rect = pygame.Rect(int(width/2-4), int(height/2-18), 38, 58)
+    player_rect = pygame.Rect(int(width/2+7), int(height/2-15), 42, 72)
     wall_rect = pygame.Rect(width-50, height-100, 10, 50)
     tree2_rect = pygame.Rect(80+200, height-90, 20, 60)
     leafs2_rect = pygame.Rect(70+200, height-130, 40, 40)
     cloud1_rect = pygame.Rect(0, 80, 60, 40)
     cloud2_rect = pygame.Rect(80, 100, 60, 40)
     cloud3_rect = pygame.Rect(width-80, 90, 70, 35)
-    dirt_rect = pygame.Rect(0, height+50, width, 300)
+    dirt_rect = pygame.Rect(-1000, height+50, width+1000, 300)
 
     unsolid_moverect_list = [tree_rect, leafs_rect, tree2_rect, leafs2_rect, cloud1_rect, cloud2_rect, cloud3_rect]
     solid_moverect_list = [grass_rect, wall_rect, dirt_rect]
@@ -162,8 +134,8 @@ def main():
     first_frame = True
     temp_jump_lenght = 0
     can_jump = True
-    
-    print(sprintLoader.player_animation_list(idle, 2, 2))
+    player_animation_timer = 0
+    player_sprite_number = 0
     
     while mainloop:
         events = pygame.event.get()
@@ -172,13 +144,9 @@ def main():
         player_x = 0
         player_y = 0
         temp_jump = 0
-        player_movement_allow = True
-        gravity_movement_allow = True
-        jump_movement_allow = True
-        one_pixel_movement_allow = True
-        in_block = False
-        player_on_the_ground = False
-        jumping = False
+        one_pixel_movement_allow, jump_movement_allow, gravity_movement_allow = True, True, True
+        player_on_the_ground, jumping, in_block, player_movement_allow = False, False, False, True
+        player_running_to_right, player_running_to_left, player_crouching = False, False, False
 
         exit = action.get('exit')
         movement_event_happened = action.get('movement_event_happened')
@@ -211,6 +179,7 @@ def main():
         if ctrl_down:
             player_rect.height -= 32
             player_rect.top += 32
+            player_crouching = True
         
         #kijk of de speler op de grond is
         for rects in solid_moverect_list:
@@ -230,9 +199,9 @@ def main():
                 temp_jump_lenght += 1
                 jumping = True
         if jumping == True:
-            player_y -= 5
-        
+            player_y -= 5  
         if jumping != True:
+            
             #look if you can add gravity
             for rects in solid_moverect_list:
                 rects.top -= gravity
@@ -265,6 +234,11 @@ def main():
                 for rect in unsolid_moverect_list:
                     rect.top -= player_y
                     rect.left -= player_x
+                
+            if player_x > 0:
+                player_running_to_right = True
+            if player_x < 0:
+                player_running_to_left = True
         
         #look if you can jump
         for rects in solid_moverect_list:
@@ -307,6 +281,54 @@ def main():
                 rect.top += gravity
             for rect in unsolid_moverect_list:
                 rect.top += gravity
+
+        #calculate what player sprite needs to be displayed
+        if player_animation_timer == player_animation_speed:
+            player_animation_timer = 0
+        else:
+            player_animation_timer += 1
+        
+        if player_crouching == True and player_running_to_left == True:
+            if player_animation_timer == 0:
+                player_sprite_number += 1
+            if player_sprite_number == 4:
+                player_sprite_number = 0
+            
+            player_sprite = sprintLoader.player_animation("crouch left", character_bigness, player_sprite_number)
+            player_sprite = player_sprite.player_sprite
+        elif player_crouching == True and player_running_to_right == True or player_crouching == True:
+            if player_animation_timer == 0:
+                player_sprite_number += 1
+            if player_sprite_number == 4:
+                player_sprite_number = 0
+            
+            player_sprite = sprintLoader.player_animation("crouch right", character_bigness, player_sprite_number)
+            player_sprite = player_sprite.player_sprite
+            
+        elif player_running_to_left == True:
+            if player_animation_timer == 0:
+                player_sprite_number += 1
+            if player_sprite_number == 6:
+                player_sprite_number = 0
+            
+            player_sprite = sprintLoader.player_animation("run left", character_bigness, player_sprite_number)
+            player_sprite = player_sprite.player_sprite
+        elif player_running_to_right == True:
+            if player_animation_timer == 0:
+                player_sprite_number += 1
+            if player_sprite_number == 6:
+                player_sprite_number = 0
+            
+            player_sprite = sprintLoader.player_animation("run right", character_bigness, player_sprite_number)
+            player_sprite = player_sprite.player_sprite
+        else:
+            if player_animation_timer == 0:
+                player_sprite_number += 1
+            if player_sprite_number == 4:
+                player_sprite_number = 0
+            
+            player_sprite = sprintLoader.player_animation("idle", character_bigness, player_sprite_number)
+            player_sprite = player_sprite.player_sprite
         
         #background
         gameDisplay.fill(GRAY)
