@@ -1,3 +1,5 @@
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 from opensimplex import OpenSimplex
 import pygame
 import random
@@ -81,6 +83,7 @@ def main():
     fps = 60 #frames per second
     character_bigness = 2.5 #how big your character is
     player_speed = 5 #how many pixels you move
+    player_crouching_speed = 2 #how many pixels the player moves when crouching
     gravity = 5 #how many pixels you go down
     player_animation_speed = 15 #after how many frames the next idle animation comes
     jump_lenght = 20 #how many frames you jump
@@ -114,12 +117,9 @@ def main():
     wall_rect = pygame.Rect(width-50, height-100, 10, 50)
     tree2_rect = pygame.Rect(80+200, height-90, 20, 60)
     leafs2_rect = pygame.Rect(70+200, height-130, 40, 40)
-    cloud1_rect = pygame.Rect(0, 80, 60, 40)
-    cloud2_rect = pygame.Rect(80, 100, 60, 40)
-    cloud3_rect = pygame.Rect(width-80, 90, 70, 35)
     dirt_rect = pygame.Rect(-1000, height+50, width+1000, 300)
 
-    unsolid_moverect_list = [tree_rect, leafs_rect, tree2_rect, leafs2_rect, cloud1_rect, cloud2_rect, cloud3_rect]
+    unsolid_moverect_list = [tree_rect, leafs_rect, tree2_rect, leafs2_rect]
     solid_moverect_list = [grass_rect, wall_rect, dirt_rect]
     UI_rects = [quit_rect, test_rect]
     background_list = [wallpaper]
@@ -172,9 +172,15 @@ def main():
         elif s_down:
             player_y += 0 * player_speed # s is disabeld
         elif a_down:
-            player_x -= 1 * player_speed
+            if ctrl_down:
+                player_x -= 1 * player_crouching_speed
+            else:
+                player_x -= 1 * player_speed
         elif d_down:
-            player_x += 1 * player_speed
+            if ctrl_down:
+                player_x += 1 * player_crouching_speed
+            else:
+                player_x += 1 * player_speed
             
         if ctrl_down:
             player_rect.height -= 32
@@ -189,19 +195,21 @@ def main():
             rects.top += 1
         
         #calculate jump
-        if player_on_the_ground == True and temp_jump_lenght != 0:
-            temp_jump_lenght = 0
-            can_jump = True
         if space_down:
-            if temp_jump_lenght == jump_lenght:
-                can_jump = False
-            if can_jump == True:
-                temp_jump_lenght += 1
-                jumping = True
-        if jumping == True:
-            player_y -= 5  
-        if jumping != True:
-            
+            if player_on_the_ground == True and temp_jump_lenght != 0:
+                temp_jump_lenght = 0
+                can_jump = True
+            if space_down:
+                if temp_jump_lenght == jump_lenght:
+                    can_jump = False
+                if can_jump == True:
+                    temp_jump_lenght += 1
+                    jumping = True
+            if jumping == True:
+                player_y -= 5
+        
+        print(temp_jump_lenght)
+        if jumping != True:  
             #look if you can add gravity
             for rects in solid_moverect_list:
                 rects.top -= gravity
@@ -342,9 +350,6 @@ def main():
         pygame.draw.rect(gameDisplay, GREEN, unsolid_moverect_list[1])
         pygame.draw.rect(gameDisplay, (122, 84, 38), unsolid_moverect_list[2])
         pygame.draw.rect(gameDisplay, GREEN, unsolid_moverect_list[3])
-        pygame.draw.rect(gameDisplay, BLUE, unsolid_moverect_list[4])
-        pygame.draw.rect(gameDisplay, BLUE, unsolid_moverect_list[5])
-        pygame.draw.rect(gameDisplay, BLUE, unsolid_moverect_list[6])
         pygame.draw.rect(gameDisplay, (122, 84, 38), unsolid_moverect_list[0])
         pygame.draw.rect(gameDisplay, (107, 58, 22), solid_moverect_list[1])
         

@@ -17,6 +17,8 @@ class player_animation:
             idle03 = pygame.image.load("art-assets/player/sprites/adventurer-idle-03.png")
             idle03 = pygame.transform.scale(idle03, (int(50 * size), int(37 * size)))
             
+            if player_sprite_number > 3:
+                player_sprite_number = 0
             animation_list = [idle00, idle01, idle02, idle03]
             self.player_sprite = animation_list[player_sprite_number]
             
@@ -32,8 +34,10 @@ class player_animation:
             run04 = pygame.image.load("art-assets/player/sprites/adventurer-run-04.png")
             run04 = pygame.transform.scale(run04, (int(50 * size), int(37 * size)))
             run05 = pygame.image.load("art-assets/player/sprites/adventurer-run-05.png")
-            run05 = pygame.transform.scale(run05, (int(50 * size), int(37 * size)))     
+            run05 = pygame.transform.scale(run05, (int(50 * size), int(37 * size)))    
             
+            if player_sprite_number > 5:
+                player_sprite_number = 0
             animation_list = [run00, run01, run02, run03, run04, run05]
             self.player_sprite = animation_list[player_sprite_number]
             
@@ -57,6 +61,8 @@ class player_animation:
             run05 = pygame.transform.scale(run05, (int(50 * size), int(37 * size)))     
             run05 = pygame.transform.flip(run05, True, False)
             
+            if player_sprite_number > 5:
+                player_sprite_number = 0
             animation_list = [run00, run01, run02, run03, run04, run05]
             self.player_sprite = animation_list[player_sprite_number]
         
@@ -70,6 +76,8 @@ class player_animation:
             crouch03 = pygame.image.load("art-assets/player/sprites/adventurer-crouch-03.png")
             crouch03 = pygame.transform.scale(crouch03, (int(50 * size), int(37 * size)))
             
+            if player_sprite_number > 3:
+                player_sprite_number = 0
             animation_list = [crouch00, crouch01, crouch02, crouch03]
             self.player_sprite = animation_list[player_sprite_number]
             
@@ -87,6 +95,8 @@ class player_animation:
             crouch03 = pygame.transform.scale(crouch03, (int(50 * size), int(37 * size)))
             crouch03 = pygame.transform.flip(crouch03, True, False)
             
+            if player_sprite_number > 3:
+                player_sprite_number = 0
             animation_list = [crouch00, crouch01, crouch02, crouch03]
             self.player_sprite = animation_list[player_sprite_number]
             
