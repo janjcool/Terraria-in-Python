@@ -4,86 +4,16 @@ from opensimplex import OpenSimplex
 import pygame
 import random
 import sprintLoader
+import events_handeler
+import config
 pygame.init()
-
-def handle_events(events, quit_rect, test_rect):
-    handle_events_dict = {}
-    no_movement = False
-    no_ctrl = False
-    no_space = False
-    
-    for event in events:
-        if event.type == pygame.QUIT:
-            handle_events_dict['exit'] = True
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-                # 1 is the left mouse button, 2 is middle, 3 is right.
-                if event.button == 1:
-                    # `event.pos` is the mouse position.
-                    if quit_rect.collidepoint(event.pos):
-                        handle_events_dict['exit'] = True
-                    if test_rect.collidepoint(event.pos):
-                        handle_events_dict['test'] = True
-                        
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
-                handle_events_dict['w_down'] = True
-                no_movement = True
-            elif event.key == pygame.K_s:
-                handle_events_dict['s_down'] = True
-                no_movement = True
-            elif event.key == pygame.K_a:
-                handle_events_dict['a_down'] = True
-                no_movement = True
-            elif event.key == pygame.K_d:
-                handle_events_dict['d_down'] = True
-                no_movement = True
-
-            elif event.key == pygame.K_ESCAPE:
-                handle_events_dict['exit'] = True
-            
-            elif event.key == 1073742048:
-                handle_events_dict['ctrl_down'] = True
-                no_ctrl = True     
-            elif event.key == 32:
-                handle_events_dict['space_down'] = True
-                no_space = True
-    
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_w:
-                handle_events_dict['w_down'] = False
-                no_movement = True
-            elif event.key == pygame.K_s:
-                handle_events_dict['s_down'] = False
-                no_movement = True
-            elif event.key == pygame.K_a:
-                handle_events_dict['a_down'] = False
-                no_movement = True
-            elif event.key == pygame.K_d:
-                handle_events_dict['d_down'] = False
-                no_movement = True
-            elif event.key == 1073742048:
-                handle_events_dict['ctrl_down'] = False
-                no_ctrl = True
-            elif event.key == 32:
-                handle_events_dict['space_down'] = False
-                no_space = True
-        
-    if no_movement != True:
-        handle_events_dict['movement_event_happened'] = False
-    if no_ctrl != True:
-        handle_events_dict['ctrl_event_happened'] = False
-    if no_space != True:
-        handle_events_dict['space_event_happened'] = False
-    
-    return handle_events_dict    
-        
+      
 def main():
-    width = 1000 #in pixels (best mulipley by 16)
-    height = 700 #in pixels (best mulipley by 16)
-    fps = 60 #frames per second
-    character_bigness = 2.5 #how big your character is
-    player_speed = 5 #how many pixels you move
-    player_crouching_speed = 2 #how many pixels the player moves when crouching
+    config_options = config.options()
+    config_colors = config.colors()
+    config_fonts = config.fonts()
+    config_rects = config.rects(config_options.width, config_options.height)
+
     gravity = 5 #how many pixels you go down
     player_animation_speed = 15 #after how many frames the next idle animation comes
     jump_lenght = 20 #how many frames you jump
@@ -95,7 +25,7 @@ def main():
     GREEN = (0, 255, 0)
     BLUE = (0, 0, 255)
 
-    gameDisplay = pygame.display.set_mode((width,height), 0, 32)
+    gameDisplay = pygame.display.set_mode((config_options.width,config_options.height), 0, 32)
     pygame.display.set_caption('a project I probably won`t finish')
     font20 = pygame.font.SysFont('Arial', 20)
     font30 = pygame.font.SysFont('Arial', 30)
@@ -106,18 +36,18 @@ def main():
     clock = pygame.time.Clock()
     
     wallpaper = pygame.image.load("background.png")
-    wallpaper = pygame.transform.scale(wallpaper, (width, height))
+    wallpaper = pygame.transform.scale(wallpaper, (config_options.width, config_options.height))
 
-    quit_rect = pygame.Rect(width-80, 0, 80, 60)
+    quit_rect = pygame.Rect(config_options.width-80, 0, 80, 60)
     test_rect = pygame.Rect(0, 0, 100, 100)
-    grass_rect = pygame.Rect(0, height-50, width, 100)
-    tree_rect = pygame.Rect(80, height-90, 20, 60)
-    leafs_rect = pygame.Rect(70, height-130, 40, 40)
-    player_rect = pygame.Rect(int(width/2+7), int(height/2-15), 42, 72)
-    wall_rect = pygame.Rect(width-50, height-100, 10, 50)
-    tree2_rect = pygame.Rect(80+200, height-90, 20, 60)
-    leafs2_rect = pygame.Rect(70+200, height-130, 40, 40)
-    dirt_rect = pygame.Rect(-1000, height+50, width+1000, 300)
+    grass_rect = pygame.Rect(0, config_options.height-50, config_options.width, 100)
+    tree_rect = pygame.Rect(80, config_options.height-90, 20, 60)
+    leafs_rect = pygame.Rect(70, config_options.height-130, 40, 40)
+    player_rect = pygame.Rect(int(config_options.width/2+7), int(config_options.height/2-15), 42, 72)
+    wall_rect = pygame.Rect(config_options.width-50, config_options.height-100, 10, 50)
+    tree2_rect = pygame.Rect(80+200, config_options.height-90, 20, 60)
+    leafs2_rect = pygame.Rect(70+200, config_options.height-130, 40, 40)
+    dirt_rect = pygame.Rect(-1000, config_options.height+50, config_options.width+1000, 300)
 
     unsolid_moverect_list = [tree_rect, leafs_rect, tree2_rect, leafs2_rect]
     solid_moverect_list = [grass_rect, wall_rect, dirt_rect]
@@ -140,26 +70,28 @@ def main():
     while mainloop:
         events = pygame.event.get()
         mouse = pygame.mouse.get_pos()
-        action = handle_events(events, quit_rect, test_rect)
+        event_class = events_handeler.events_dict(events, UI_rects)
+        event_dict = event_class.handle_events_dict
         player_x = 0
         player_y = 0
         temp_jump = 0
         one_pixel_movement_allow, jump_movement_allow, gravity_movement_allow = True, True, True
         player_on_the_ground, jumping, in_block, player_movement_allow = False, False, False, True
         player_running_to_right, player_running_to_left, player_crouching = False, False, False
+        middle_player_jump = False
 
-        exit = action.get('exit')
-        movement_event_happened = action.get('movement_event_happened')
-        ctrl_event_happened = action.get('ctrl_event_happened')
-        space_event_happened = action.get('space_event_happened')
-        testPressed = action.get('test')
+        exit = event_dict.get('exit')
+        movement_event_happened = event_dict.get('movement_event_happened')
+        ctrl_event_happened = event_dict.get('ctrl_event_happened')
+        space_event_happened = event_dict.get('space_event_happened')
+        testPressed = event_dict.get('test')
         
         if movement_event_happened != False:
-            w_down, s_down, a_down, d_down = action.get('w_down'), action.get('s_down'), action.get('a_down'), action.get('d_down')
+            w_down, s_down, a_down, d_down = event_dict.get('w_down'), event_dict.get('s_down'), event_dict.get('a_down'), event_dict.get('d_down')
         if ctrl_event_happened != False:
-            ctrl_down = action.get('ctrl_down')
+            ctrl_down = event_dict.get('ctrl_down')
         if space_event_happened != False:
-            space_down = action.get('space_down')
+            space_down = event_dict.get('space_down')
 
         if exit:
             return True
@@ -168,26 +100,26 @@ def main():
             print("test button")
 
         if w_down:
-            player_y -= 0 * player_speed # w is disabeld
+            player_y -= 0 * config_options.player_speed # w is disabeld
         elif s_down:
-            player_y += 0 * player_speed # s is disabeld
+            player_y += 0 * config_options.player_speed # s is disabeld
         elif a_down:
             if ctrl_down:
-                player_x -= 1 * player_crouching_speed
+                player_x -= 1 * config_options.player_crouching_speed
             else:
-                player_x -= 1 * player_speed
+                player_x -= 1 * config_options.player_speed
         elif d_down:
             if ctrl_down:
-                player_x += 1 * player_crouching_speed
+                player_x += 1 * config_options.player_crouching_speed
             else:
-                player_x += 1 * player_speed
+                player_x += 1 * config_options.player_speed
             
         if ctrl_down:
             player_rect.height -= 32
             player_rect.top += 32
             player_crouching = True
         
-        #kijk of de speler op de grond is
+        #look if player is on the ground
         for rects in solid_moverect_list:
             rects.top -= 1
             if player_rect.colliderect(rects) == True:
@@ -202,13 +134,26 @@ def main():
             if space_down:
                 if temp_jump_lenght == jump_lenght:
                     can_jump = False
+                    middle_player_jump = True
                 if can_jump == True:
                     temp_jump_lenght += 1
+                    player_y -= 5
                     jumping = True
-            if jumping == True:
-                player_y -= 5
         
-        print(temp_jump_lenght)
+        #look if you can jump
+        for rects in solid_moverect_list:
+            rects.top += temp_jump
+            if player_rect.colliderect(rects) == True:
+                jump_movement_allow = False
+            rects.top -= temp_jump
+
+        #add jump
+        if jump_movement_allow == True:
+            for rects in solid_moverect_list:
+                rects.top += temp_jump
+            for rects in unsolid_moverect_list:
+                rects.top += temp_jump
+        
         if jumping != True:  
             #look if you can add gravity
             for rects in solid_moverect_list:
@@ -248,20 +193,6 @@ def main():
             if player_x < 0:
                 player_running_to_left = True
         
-        #look if you can jump
-        for rects in solid_moverect_list:
-            rects.top += temp_jump
-            if player_rect.colliderect(rects) == True:
-                jump_movement_allow = False
-            rects.top -= temp_jump
-
-        #add jump
-        if jump_movement_allow == True:
-            for rects in solid_moverect_list:
-                rects.top += temp_jump
-            for rects in unsolid_moverect_list:
-                rects.top += temp_jump
-        
         #look if you can add 1 pixel down
         for rects in solid_moverect_list:
             rects.top -= 1
@@ -296,47 +227,9 @@ def main():
         else:
             player_animation_timer += 1
         
-        if player_crouching == True and player_running_to_left == True:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number == 4:
-                player_sprite_number = 0
-            
-            player_sprite = sprintLoader.player_animation("crouch left", character_bigness, player_sprite_number)
-            player_sprite = player_sprite.player_sprite
-        elif player_crouching == True and player_running_to_right == True or player_crouching == True:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number == 4:
-                player_sprite_number = 0
-            
-            player_sprite = sprintLoader.player_animation("crouch right", character_bigness, player_sprite_number)
-            player_sprite = player_sprite.player_sprite
-            
-        elif player_running_to_left == True:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number == 6:
-                player_sprite_number = 0
-            
-            player_sprite = sprintLoader.player_animation("run left", character_bigness, player_sprite_number)
-            player_sprite = player_sprite.player_sprite
-        elif player_running_to_right == True:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number == 6:
-                player_sprite_number = 0
-            
-            player_sprite = sprintLoader.player_animation("run right", character_bigness, player_sprite_number)
-            player_sprite = player_sprite.player_sprite
-        else:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number == 4:
-                player_sprite_number = 0
-            
-            player_sprite = sprintLoader.player_animation("idle", character_bigness, player_sprite_number)
-            player_sprite = player_sprite.player_sprite
+        player_animation_chooser_class = sprintLoader.player_animation_chooser(player_animation_timer, config_options.character_bigness, player_crouching, player_running_to_left, jumping, gravity_movement_allow, player_running_to_right, player_sprite_number)
+        player_sprite = player_animation_chooser_class.player_sprite
+        player_sprite_number = player_animation_chooser_class.player_sprite_number
         
         #background
         gameDisplay.fill(GRAY)
@@ -357,12 +250,12 @@ def main():
         pygame.draw.rect(gameDisplay, GREEN, player_rect)      #enable for player collider
         
         #player
-        gameDisplay.blit(player_sprite, (int(width/2-32), int(height/2-32)))
+        gameDisplay.blit(player_sprite, (int(config_options.width/2-32), int(config_options.height/2-32)))
 
         #ui level
         pygame.draw.rect(gameDisplay, (33, 33, 33), UI_rects[1])
         pygame.draw.rect(gameDisplay, (23, 23, 23), UI_rects[0])
-        gameDisplay.blit(font30.render('quit', True, WHITE), (width-60, 10))
+        gameDisplay.blit(font30.render('quit', True, WHITE), (config_options.width-60, 10))
 
         if ctrl_down:
             player_rect.height += 32
@@ -371,7 +264,7 @@ def main():
         pygame.display.update()
         first_frame = False
         #delta time is milliseconds since the previous call
-        deltatime = clock.tick(fps)
+        deltatime = clock.tick(config_options.fps)
 
 
 main()
