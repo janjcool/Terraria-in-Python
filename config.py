@@ -12,7 +12,7 @@ class options:
         self.gravity = 5 #how many pixels you go down
         self.player_animation_speed = 15 #after how many frames the next idle animation comes
         self.jump_lenght = 20 #how many frames you jump
-        self.jump_speed = 30 #pixel you jump per second
+        self.screen_title = "a project I probably won`t finish" #the title of the window
 
 class colors:
     def __init__(self):
@@ -32,16 +32,16 @@ class fonts:
 class rects:
     def __init__(self, width, height):
         #background
-        wallpaper = pygame.image.load("background.png")
-        self.wallpaper = pygame.transform.scale(wallpaper, (width, height))
+        self.wallpaper = pygame.image.load("background.png")
+        self.wallpaper = pygame.transform.scale(self.wallpaper, (width, height))
         
-        self.background_list = [wallpaper]
+        self.background_list = [self.wallpaper]
 
         #UI
         self.quit_rect = pygame.Rect(width-80, 0, 80, 60)
         self.test_rect = pygame.Rect(0, 0, 100, 100)
         
-        self.UI_rects = [self.quit_rect, self.test_rect]
+        self.UI_rects_list = [self.quit_rect, self.test_rect]
         
         #solid
         self.grass_rect = pygame.Rect(0, height-50, width, 100)
