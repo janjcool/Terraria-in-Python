@@ -6,7 +6,3 @@ class UIController:
         
         if self.exit:
             self.exit = True
-        
-        if self.testPressed:
-            self.testPressed = True
-            print("test button")

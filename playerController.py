@@ -25,16 +25,16 @@ class movement:
             self.playerController_variables[5] = event_dict.get('space_down')
 
         #add movement of wasd
-        if self.playerController_variables[0]: # w is disabeld
+        if self.playerController_variables[0]: # w is disabled
             player_y -= 0 * config_options.player_speed
-        elif self.playerController_variables[1]: # s is disabeld
+        elif self.playerController_variables[1]: # s is disabled
             player_y += 0 * config_options.player_speed 
-        elif self.playerController_variables[2]: # a is enabeld
+        elif self.playerController_variables[2]: # a is enabled
             if self.playerController_variables[4]:
                 player_x -= 1 * config_options.player_crouching_speed
             else:
                 player_x -= 1 * config_options.player_speed
-        elif self.playerController_variables[3]: # d is enabeld
+        elif self.playerController_variables[3]: # d is enabled
             if self.playerController_variables[4]:
                 player_x += 1 * config_options.player_crouching_speed
             else:

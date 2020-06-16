@@ -1,8 +1,8 @@
 from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+import sprintLoader, eventHandeler, config, playerController, UIHandeler, worldGenerator
 import pygame
 import random
-import sprintLoader, eventHandeler, config, playerController, UIHandeler
 pygame.init()
       
 def main():
@@ -15,7 +15,7 @@ def main():
     pygame.display.set_caption(config_options.screen_title)
     clock = pygame.time.Clock()
 
-    #don't chanche the following variables
+    #don't chance the following variables
     w_down, s_down, a_down, d_down, ctrl_down, space_down = False, False, False, False, False, False
     playerController_variables = [w_down, s_down, a_down, d_down, ctrl_down, space_down]
     deltatime, temp_jump_lenght, player_animation_timer, player_sprite_number = 0, 0, 0, 0
@@ -34,6 +34,13 @@ def main():
         UIController = UIHandeler.UIController(event_dict)
         if UIController.exit == True:
             return
+        
+        testPressed = event_dict.get('test')
+        if testPressed:
+            testPressed = True
+            print("start test button")
+            worldGenerator_class = worldGenerator.world("medium", config_options)
+            print("end test button")
         
         #playerController class
         playerController_class = playerController.movement(event_dict, playerController_variables, config_rects, config_options, temp_jump_lenght, can_jump, temp_player_crouching)
@@ -74,23 +81,16 @@ def main():
         #player
         gameDisplay.blit(player_sprite, (int(config_options.width/2-32), int(config_options.height/2-32)))
 
-        #ui level
+        #UI level
         pygame.draw.rect(gameDisplay, (33, 33, 33), config_rects.UI_rects_list[1])
         pygame.draw.rect(gameDisplay, (23, 23, 23), config_rects.UI_rects_list[0])
         gameDisplay.blit(config_fonts.font30.render('quit', True, config_colors.WHITE), (config_options.width-60, 10))
 
-        """
-        if playerController_class.playerController_variables[4]:
-            config_rects.player_rect.height += 32
-            config_rects.player_rect.top -= 32
-        """
-
         pygame.display.update()
-        first_frame = False
-        #delta time is milliseconds since the previous call
-        deltatime = clock.tick(config_options.fps)
+        deltatime = clock.tick(config_options.fps) #delta time is milliseconds since the previous call
 
 if __name__ == '__main__':
     main()
+    
 pygame.quit()
 quit()

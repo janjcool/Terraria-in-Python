@@ -3,16 +3,22 @@ pygame.init()
 
 class options:
     def __init__(self):
-        self.width = 1000 #in pixels (best mulipley by 16)
-        self.height = 700 #in pixels (best mulipley by 16)
+        #window stuff
+        self.width = 1000 #in pixels (best multiple by 16)
+        self.height = 700 #in pixels (best multiple by 16)
         self.fps = 60 #frames per second
+        self.screen_title = "a project I probably won`t finish" #the title of the window
+        
+        #player settings
         self.character_bigness = 2.5 #how big your character is
         self.player_speed = 5 #how many pixels you move
         self.player_crouching_speed = 2 #how many pixels the player moves when crouching
-        self.gravity = 5 #how many pixels you go down
         self.player_animation_speed = 15 #after how many frames the next idle animation comes
         self.jump_lenght = 20 #how many frames you jump
-        self.screen_title = "a project I probably won`t finish" #the title of the window
+        
+        #world settings
+        self.gravity = 5 #how many pixels you go down
+        
 
 class colors:
     def __init__(self):
