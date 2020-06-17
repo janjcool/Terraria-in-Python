@@ -2,7 +2,7 @@ import pygame
 pygame.init()
 
 class movement:
-    def __init__(self, event_dict, playerController_variables, config_rects, config_options, temp_jump_lenght, can_jump, temp_player_crouching):
+    def __init__(self, event_dict, playerController_variables, config_rects_game, config_options, temp_jump_lenght, can_jump, temp_player_crouching):
         self.temp_jump_lenght = temp_jump_lenght
         self.playerController_variables = playerController_variables #w, s, a, d, ctrl, space
         one_pixel_movement_allow, jump_movement_allow, self.gravity_movement_allow = True, True, True
@@ -42,22 +42,22 @@ class movement:
             
         #calculate crouching
         if temp_player_crouching == True:
-            config_rects.player_rect.height += 32
-            config_rects.player_rect.top -= 32
+            config_rects_game.player_rect.height += 32
+            config_rects_game.player_rect.top -= 32
             
         
         if self.playerController_variables[4]:
-            config_rects.player_rect.height -= 32
-            config_rects.player_rect.top += 32
+            config_rects_game.player_rect.height -= 32
+            config_rects_game.player_rect.top += 32
             self.player_crouching = True
             self.temp_player_crouching = True
         else:
             self.temp_player_crouching = False
         
         #look if player is on the ground
-        for rects in config_rects.solid_moverect_list:
+        for rects in config_rects_game.solid_moverect_list:
             rects.top -= 1
-            if config_rects.player_rect.colliderect(rects) == True:
+            if config_rects_game.player_rect.colliderect(rects) == True:
                 player_on_the_ground = True
             rects.top += 1
         
@@ -76,39 +76,39 @@ class movement:
                     self.jumping = True
         
         #look if you can jump
-        for rects in config_rects.solid_moverect_list:
+        for rects in config_rects_game.solid_moverect_list:
             rects.top += temp_jump
-            if config_rects.player_rect.colliderect(rects) == True:
+            if config_rects_game.player_rect.colliderect(rects) == True:
                 jump_movement_allow = False
             rects.top -= temp_jump
 
         #add jump
         if jump_movement_allow == True:
-            for rects in config_rects.solid_moverect_list:
+            for rects in config_rects_game.solid_moverect_list:
                 rects.top += temp_jump
-            for rects in config_rects.unsolid_moverect_list:
+            for rects in config_rects_game.unsolid_moverect_list:
                 rects.top += temp_jump
         
         if self.jumping != True:  
             #look if you can add gravity
-            for rects in config_rects.solid_moverect_list:
+            for rects in config_rects_game.solid_moverect_list:
                 rects.top -= config_options.gravity
-                if config_rects.player_rect.colliderect(rects) == True:
+                if config_rects_game.player_rect.colliderect(rects) == True:
                     self.gravity_movement_allow = False
                 rects.top += config_options.gravity
 
             #add gravity
             if self.gravity_movement_allow == True:
-                for rects in config_rects.solid_moverect_list:
+                for rects in config_rects_game.solid_moverect_list:
                     rects.top -= config_options.gravity
-                for rects in config_rects.unsolid_moverect_list:
+                for rects in config_rects_game.unsolid_moverect_list:
                     rects.top -= config_options.gravity
         
         #look if you can add button movement
-        for rect in config_rects.solid_moverect_list:
+        for rect in config_rects_game.solid_moverect_list:
             rect.top -= player_y
             rect.left -= player_x
-            if config_rects.player_rect.colliderect(rect) == True:
+            if config_rects_game.player_rect.colliderect(rect) == True:
                 player_movement_allow = False
             rect.top += player_y
             rect.left += player_x
@@ -116,10 +116,10 @@ class movement:
         #add button movement
         if player_x != 0 or player_y != 0:
             if player_movement_allow == True:
-                for rect in config_rects.solid_moverect_list:
+                for rect in config_rects_game.solid_moverect_list:
                     rect.top -= player_y
                     rect.left -= player_x
-                for rect in config_rects.unsolid_moverect_list:
+                for rect in config_rects_game.unsolid_moverect_list:
                     rect.top -= player_y
                     rect.left -= player_x
                 
@@ -129,29 +129,29 @@ class movement:
                 self.player_running_to_left = True
         
         #look if you can add 1 pixel down
-        for rects in config_rects.solid_moverect_list:
+        for rects in config_rects_game.solid_moverect_list:
             rects.top -= 1
-            if config_rects.player_rect.colliderect(rects) == True:
+            if config_rects_game.player_rect.colliderect(rects) == True:
                 one_pixel_movement_allow = False
             rects.top += 1
 
         #add 1 pixel down
         if self.gravity_movement_allow != True:
             if one_pixel_movement_allow == True:
-                for rects in config_rects.solid_moverect_list:
+                for rects in config_rects_game.solid_moverect_list:
                     rects.top -= 1
-                for rects in config_rects.unsolid_moverect_list:
+                for rects in config_rects_game.unsolid_moverect_list:
                     rects.top -= 1
         
         #look if your in a block
-        for rect in config_rects.solid_moverect_list:
-            if config_rects.player_rect.colliderect(rect) == True:
+        for rect in config_rects_game.solid_moverect_list:
+            if config_rects_game.player_rect.colliderect(rect) == True:
                 in_block = True
         
         #push you up if your stuck in a block
         if in_block == True:
             print("stuck")
-            for rect in config_rects.solid_moverect_list:
+            for rect in config_rects_game.solid_moverect_list:
                 rect.top += config_options.gravity
-            for rect in config_rects.unsolid_moverect_list:
+            for rect in config_rects_game.unsolid_moverect_list:
                 rect.top += config_options.gravity

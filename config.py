@@ -8,6 +8,7 @@ class options:
         self.height = 700 #in pixels (best multiple by 16)
         self.fps = 60 #frames per second
         self.screen_title = "a project I probably won`t finish" #the title of the window
+        self.displayer_choser = "mainMenu" #choos what display (example: mainMenu, game, inv...) to start with
         
         #player settings
         self.character_bigness = 2.5 #how big your character is
@@ -35,19 +36,18 @@ class fonts:
         self.font30 = pygame.font.SysFont('Arial', 30)
         self.font40 = pygame.font.SysFont('Arial', 40)
 
-class rects:
+class rects_game:
     def __init__(self, width, height):
         #background
         self.wallpaper = pygame.image.load("background.png")
         self.wallpaper = pygame.transform.scale(self.wallpaper, (width, height))
         
-        self.background_list = [self.wallpaper]
+        self.background_list_game = [self.wallpaper]
 
         #UI
-        self.quit_rect = pygame.Rect(width-80, 0, 80, 60)
         self.test_rect = pygame.Rect(0, 0, 100, 100)
         
-        self.UI_rects_list = [self.quit_rect, self.test_rect]
+        self.UI_rects_list_game = [self.test_rect]
         
         #solid
         self.grass_rect = pygame.Rect(0, height-50, width, 100)
@@ -66,3 +66,23 @@ class rects:
         
         #player
         self.player_rect = pygame.Rect(int(width/2+7), int(height/2-15), 42, 72)
+        self.player_sprite = pygame.image.load("art-assets/player/sprites/adventurer-idle-00.png")
+
+class rects_mainMenu:
+    def __init__(self, width, height):
+        #background
+        
+        #buttons
+        self.start_button = pygame.Rect(int(width/2-50), int(height/2-50), 100, 100)
+        
+        self.UI_rects_list = [self.start_button]
+        
+class rects_gameMenu:
+    def __init__(self, width, height):
+        #background
+        
+        #buttons
+        self.game_button = pygame.Rect(int(width/2-50), int(height/2-125), 100, 100)
+        self.mainMenu_button = pygame.Rect(int(width/2-50), int(height/2+25), 100, 100)
+        
+        self.UI_rects_list = [self.game_button, self.mainMenu_button]
