@@ -73,16 +73,25 @@ class rects_mainMenu:
         #background
         
         #buttons
-        self.start_button = pygame.Rect(int(width/2-50), int(height/2-50), 100, 100)
+        self.start_button = pygame.Rect(int(width/2-125), int(height/2-50), 250, 100)
         
-        self.UI_rects_list = [self.start_button]
+        self.start_button_image = pygame.image.load("art-assets/ui/play_button.png")
+        self.start_button_image = pygame.transform.scale(self.start_button_image, (250, 100))
+        
+        self.UI_rects_list = [self.start_button, self.start_button_image]
         
 class rects_gameMenu:
     def __init__(self, width, height):
         #background
         
         #buttons
-        self.game_button = pygame.Rect(int(width/2-50), int(height/2-125), 100, 100)
-        self.mainMenu_button = pygame.Rect(int(width/2-50), int(height/2+25), 100, 100)
+        self.game_button = pygame.Rect(int(width/2-125), int(height/2-125), 250, 100)
+        self.mainMenu_button = pygame.Rect(int(width/2-125), int(height/2+25), 250, 100)
         
-        self.UI_rects_list = [self.game_button, self.mainMenu_button]
+        self.mainMenu_button_image = pygame.image.load("art-assets/ui/play_button.png")
+        self.mainMenu_button_image = pygame.transform.scale(self.mainMenu_button_image, (250, 100))
+        
+        self.game_button_image = pygame.image.load("art-assets/ui/exit_button.png")
+        self.game_button_image = pygame.transform.scale(self.game_button_image, (250, 100))
+        
+        self.UI_rects_list = [self.game_button, self.mainMenu_button, self.mainMenu_button_image, self.game_button_image]

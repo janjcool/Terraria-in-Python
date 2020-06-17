@@ -14,7 +14,7 @@ class mainMenu:
         self.gameDisplay.fill(self.config_colors.GRAY)
         
         #UI
-        pygame.draw.rect(self.gameDisplay, self.config_colors.GREEN, self.config_rects_mainMenu.UI_rects_list[0])
+        self.gameDisplay.blit(self.config_rects_mainMenu.UI_rects_list[1], (int(self.config_options.width/2-125), int(self.config_options.height/2-50)))
 
 class gameMenu:
     def __init__(self, gameDisplay, config_rects_gameMenu, config_colors, config_options, config_fonts):
@@ -26,8 +26,8 @@ class gameMenu:
     def main(self):
         
         #UI
-        pygame.draw.rect(self.gameDisplay, self.config_colors.GRAY, self.config_rects_gameMenu.UI_rects_list[0])
-        pygame.draw.rect(self.gameDisplay, self.config_colors.GRAY, self.config_rects_gameMenu.UI_rects_list[1])
+        self.gameDisplay.blit(self.config_rects_gameMenu.UI_rects_list[2], (int(self.config_options.width/2-125), int(self.config_options.height/2-125)))
+        self.gameDisplay.blit(self.config_rects_gameMenu.UI_rects_list[3], (int(self.config_options.width/2-125), int(self.config_options.height/2+25)))
 
 class game:
     def __init__(self, gameDisplay, config_rects_game, config_colors, config_options, config_fonts):
