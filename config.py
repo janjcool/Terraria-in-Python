@@ -42,12 +42,12 @@ class rects_game:
         self.wallpaper = pygame.image.load("background.png")
         self.wallpaper = pygame.transform.scale(self.wallpaper, (width, height))
         
-        self.background_list_game = [self.wallpaper]
+        self.background_list = [self.wallpaper]
 
         #UI
         self.test_rect = pygame.Rect(0, 0, 100, 100)
         
-        self.UI_rects_list_game = [self.test_rect]
+        self.UI_rects_list = [self.test_rect]
         
         #solid
         self.grass_rect = pygame.Rect(0, height-50, width, 100)
@@ -73,12 +73,16 @@ class rects_mainMenu:
         #background
         
         #buttons
-        self.start_button = pygame.Rect(int(width/2-125), int(height/2-50), 250, 100)
+        self.start_button = pygame.Rect(int(width/2-125), int(height/2-125), 250, 100)
+        self.exit_button = pygame.Rect(int(width/2-125), int(height/2+25), 250, 100)
         
         self.start_button_image = pygame.image.load("art-assets/ui/play_button.png")
         self.start_button_image = pygame.transform.scale(self.start_button_image, (250, 100))
         
-        self.UI_rects_list = [self.start_button, self.start_button_image]
+        self.exit_button_image = pygame.image.load("art-assets/ui/exit_button.png")
+        self.exit_button_image = pygame.transform.scale(self.exit_button_image, (250, 100))
+        
+        self.UI_rects_list = [self.start_button, self.start_button_image, self.exit_button_image, self.exit_button]
         
 class rects_gameMenu:
     def __init__(self, width, height):

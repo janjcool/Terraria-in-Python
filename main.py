@@ -22,16 +22,16 @@ def main():
     clock = pygame.time.Clock()
 
     #don't chance the following variables
-    w_down, s_down, a_down, d_down, ctrl_down, space_down = False, False, False, False, False, False
-    playerController_variables = [w_down, s_down, a_down, d_down, ctrl_down, space_down]
-    deltatime, temp_jump_lenght, player_animation_timer, player_sprite_number = 0, 0, 0, 0
-    mainloop, can_jump, temp_player_crouching = True, True, False
+    playerController_class_variables = [0, True, [False, False, False, False, False, False], True]
+    deltatime, player_animation_timer, player_sprite_number = 0, 0, 0
+    mainloop = True
     
     while mainloop:
         #get event input from pygame
         events = pygame.event.get()
         mouse = pygame.mouse.get_pos()
         
+        #=======================================================================================================================================================================================#
         if config_options.displayer_choser == "mainMenu": 
             
             #event class
@@ -56,12 +56,11 @@ def main():
             #render
             renderer.mainMenu(gameDisplay, config_rects_mainMenu, config_colors, config_options, config_fonts)
             
-            
-            
+        #=======================================================================================================================================================================================#
         elif config_options.displayer_choser == "game":
             
             #event class
-            event_class_game = eventHandeler.events_dict(events, config_options, config_rects_game.UI_rects_list_game)
+            event_class_game = eventHandeler.events_dict(events, config_options, config_rects_game.UI_rects_list)
             event_dict_game = event_class_game.handle_events_dict
             
             #UI
@@ -77,8 +76,11 @@ def main():
                 config_options.displayer_choser = "gameMenu"
             
             #playerController class
-            playerController_class = playerController.movement(event_dict_game, playerController_variables, config_rects_game, config_options, temp_jump_lenght, can_jump, temp_player_crouching)
-            temp_jump_lenght, can_jump = playerController_class.temp_jump_lenght, playerController_class.can_jump
+            playerController_class = playerController.movement(event_dict_game, playerController_class_variables[2], config_rects_game, config_options, playerController_class_variables[0], playerController_class_variables[1], playerController_class_variables[3])
+            playerController_class_variables = [playerController_class.temp_jump_lenght, playerController_class.can_jump, playerController_class.playerController_variables, playerController_class.temp_player_crouching] #get info from when je call the class to the next
+            
+            temp_jump_lenght = playerController_class.temp_jump_lenght
+            can_jump = playerController_class.can_jump
             playerController_variables = playerController_class.playerController_variables
             temp_player_crouching = playerController_class.temp_player_crouching
             
@@ -95,6 +97,7 @@ def main():
             #render
             renderer.game(gameDisplay, config_rects_game, config_colors, config_options, config_fonts)
         
+        #=======================================================================================================================================================================================#
         elif config_options.displayer_choser == "gameMenu": 
             
             #event class
@@ -118,6 +121,7 @@ def main():
             #render
             renderer.gameMenu(gameDisplay, config_rects_gameMenu, config_colors, config_options, config_fonts)
             
+        #=======================================================================================================================================================================================#
         else:
             print("config_options.displayer_choser type not supported -->" + str(config_options.displayer_choser) + "<-- types that are suported: game, mainMenu")
 
