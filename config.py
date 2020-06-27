@@ -20,6 +20,22 @@ class options:
         #world settings
         self.gravity = 5 #how many pixels you go down
         
+        #map settings
+        self.mountain_steepness = 60 #more meens the heights and the lowest point of mountens are further apart
+        self.amount_of_sky = 5 #them amount of blocks before any land comes
+        self.distance_between_raw = 10 #amount of blocks between each opensimplex noise number !!!  this must be divisible by world_width  !!!
+        self.chunk_size = 32
+        self.map_width_small = 32 * 150
+        self.map_height_small = 32 * 10
+        self.map_width_medium = 32 * 200
+        self.map_height_medium = 32 * 12
+        self.map_width_large = 32 * 250
+        self.map_height_large = 32 * 14
+        
+        #sprites
+        self.dirt = ["dirt", "art-assets/dirt.png"]
+        self.sky = ["sky", 0]
+        
 
 class colors:
     def __init__(self):

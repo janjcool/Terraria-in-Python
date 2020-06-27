@@ -1,8 +1,7 @@
 from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
-import sprintLoader, eventHandeler, config, playerController, UIHandeler, worldGenerator, renderer
+import sprintLoader, eventHandeler, config, playerController, UIHandeler, worldGenerator, renderer, entity
 import pygame
-import random
 pygame.init()
 
 def exit():    
@@ -16,6 +15,7 @@ def main():
     config_rects_game = config.rects_game(config_options.width, config_options.height)
     config_rects_mainMenu = config.rects_mainMenu(config_options.width, config_options.height)
     config_rects_gameMenu = config.rects_gameMenu(config_options.width, config_options.height)
+    variables_class = entity.variables()
 
     gameDisplay = pygame.display.set_mode((config_options.width,config_options.height), 0, 32)
     pygame.display.set_caption(config_options.screen_title)
@@ -45,9 +45,7 @@ def main():
                 exit()
             
             if UIController.testPressed:
-                print("start test button")
-                #worldGenerator_class = worldGenerator.world("medium", config_options)
-                print("end test button")
+                print("doet niks")
             
             if UIController.start_button_pressed == True:
                 print("go to game")
@@ -69,7 +67,9 @@ def main():
                 exit()
                 
             if UIController.testPressed:
-                print("test button doet niks")
+                print("start test button")
+                worldGenerator_class = worldGenerator.world(config_options, variables_class)
+                print("end test button")
             
             if UIController.gameMenu_button_pressed == True:
                 print("go to gameMenu")
