@@ -2,85 +2,56 @@ import pygame
 pygame.init()
 
 class player_animation_chooser:
-    def __init__(self, player_animation_timer = 0, character_bigness = 1, player_crouching = False, player_running_to_left = False, jumping = False, gravity_movement_allow = False, player_running_to_right = False, player_sprite_number = 0):
-
-        if player_crouching == True and player_running_to_left == True:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number >= 4:
-                player_sprite_number = 0
-            
-            player_sprite = player_animation_type("crouch", character_bigness, 4, player_sprite_number, True)
-            self.player_sprite = player_sprite.player_sprite
-        elif player_crouching == True:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number >= 4:
-                player_sprite_number = 0
-            
-            player_sprite = player_animation_type("crouch", character_bigness, 4, player_sprite_number)
-            self.player_sprite = player_sprite.player_sprite
-        elif jumping == True and player_running_to_left:
-            player_sprite = player_animation_type("jump", character_bigness, 4, 2, True)
-            self.player_sprite = player_sprite.player_sprite
-        elif jumping == True:
-            player_sprite = player_animation_type("jump", character_bigness, 4, 2)
-            self.player_sprite = player_sprite.player_sprite
-        elif gravity_movement_allow == True and player_running_to_right == True:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number >= 2:
-                player_sprite_number = 0
-            
-            player_sprite = player_animation_type("fall", character_bigness, 2, player_sprite_number)
-            self.player_sprite = player_sprite.player_sprite
-        elif gravity_movement_allow == True and player_running_to_left == True:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number >= 2:
-                player_sprite_number = 0
-            
-            player_sprite = player_animation_type("fall", character_bigness, 2, player_sprite_number, True)
-            self.player_sprite = player_sprite.player_sprite   
-        elif player_running_to_left == True:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number >= 6:
-                player_sprite_number = 0
-            
-            player_sprite = player_animation_type("run", character_bigness, 6, player_sprite_number, True)
-            self.player_sprite = player_sprite.player_sprite
-        elif player_running_to_right == True:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number >= 6:
-                player_sprite_number = 0
-            
-            player_sprite = player_animation_type("run", character_bigness, 6, player_sprite_number)
-            self.player_sprite = player_sprite.player_sprite
-        elif gravity_movement_allow == True:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number >= 2:
-                player_sprite_number = 0
-            
-            player_sprite = player_animation_type("fall", character_bigness, 2, player_sprite_number)
-            self.player_sprite = player_sprite.player_sprite
+    def __init__(self, playerController_class, entity_variables, config_options):
+        self.config_options = config_options
+        self.entity_variables = entity_variables
+        
+        if self.entity_variables.player_animation_timer == self.config_options.player_animation_speed:
+            self.entity_variables.player_animation_timer = 0
         else:
-            if player_animation_timer == 0:
-                player_sprite_number += 1
-            if player_sprite_number >= 4:
-                player_sprite_number = 0
+            self.entity_variables.player_animation_timer += 1
+        
+        
+        if playerController_class.player_crouching == True and playerController_class.player_running_to_left == True:
+            self.sprite_chooser("crouch", self.config_options.character_bigness, 4, True)
             
-            player_sprite = player_animation_type("idle", character_bigness, 4, player_sprite_number)
-            self.player_sprite = player_sprite.player_sprite
-        
-        self.player_sprite_number = player_sprite_number
+        elif playerController_class.player_crouching == True:
+            self.sprite_chooser("crouch", self.config_options.character_bigness, 4, False)
+            
+        elif playerController_class.jumping == True and playerController_class.player_running_to_left:
+            self.sprite_chooser("jump", self.config_options.character_bigness, 4, True, False, 2)
+            
+        elif playerController_class.jumping == True:
+            self.sprite_chooser("jump", self.config_options.character_bigness, 4, False, False, 2)
+            
+        elif playerController_class.gravity_movement_allow == True and playerController_class.player_running_to_right == True:
+            self.sprite_chooser("fall", self.config_options.character_bigness, 2, False)
+            
+        elif playerController_class.gravity_movement_allow == True and playerController_class.player_running_to_left == True:
+            self.sprite_chooser("fall", self.config_options.character_bigness, 2, True)
+            
+        elif playerController_class.player_running_to_left == True:
+            self.sprite_chooser("run", self.config_options.character_bigness, 6, True)
+            
+        elif playerController_class.player_running_to_right == True:
+            self.sprite_chooser("run", self.config_options.character_bigness, 6, False)
+            
+        elif playerController_class.gravity_movement_allow == True:
+            self.sprite_chooser("fall", self.config_options.character_bigness, 2, False)
+            
+        else:
+            self.sprite_chooser("idle", self.config_options.character_bigness, 4, False)
 
-class player_animation_type:
-    def __init__(self, animation_type = "nothing", size = 1, amount_of_sprites = 1, player_sprite_number = 0, flip_horizontal = False):
-        
+    def sprite_chooser(self, animation_type, size = 1, amount_of_sprites = 1, flip_horizontal = False, more_then_1_sprite = True, sprite_number = 0):
         animation_list = []
+        
+        if more_then_1_sprite == True:
+            if self.entity_variables.player_animation_timer == 0:
+                self.entity_variables.player_sprite_number += 1
+            if self.entity_variables.player_sprite_number >= amount_of_sprites:
+                self.entity_variables.player_sprite_number = 0
+        else:
+            self.entity_variables.player_sprite_number = sprite_number
         
         for x in range(0, amount_of_sprites):
             temp_animation = pygame.image.load("art-assets/player/sprites/adventurer-" + animation_type + "-0" + str(x) + ".png")
@@ -90,7 +61,7 @@ class player_animation_type:
             
             animation_list.append(temp_animation)
         
-        if player_sprite_number > amount_of_sprites-1:
-                player_sprite_number = 0
+        if self.entity_variables.player_sprite_number > amount_of_sprites-1:
+                self.entity_variables.player_sprite_number = 0
                 
-        self.player_sprite = animation_list[player_sprite_number]
+        self.player_sprite = animation_list[self.entity_variables.player_sprite_number]
