@@ -1,6 +1,6 @@
 import pygame
 
-class mainMenu:
+class MainMenu:
     def __init__(self, gameDisplay, config_rects_mainMenu, config_colors, config_options, config_fonts, entity_variables):
         self.gameDisplay = gameDisplay
         self.config_colors, self.config_rects_mainMenu, self.config_options, self.config_fonts = config_colors, config_rects_mainMenu, config_options, config_fonts
@@ -25,7 +25,7 @@ class mainMenu:
         self.gameDisplay.blit(self.config_rects_mainMenu.settings_button_text, (int(100), int(self.config_options.height/2-87)))
         self.gameDisplay.blit(self.config_rects_mainMenu.exit_button_text, (int(100), int(self.config_options.height/2+125)))
 
-class gameMenu:
+class GameMenu:
     def __init__(self, gameDisplay, config_rects_gameMenu, config_colors, config_options, config_fonts, entity_variables):
         self.gameDisplay = gameDisplay
         self.config_colors, self.config_rects_gameMenu, self.config_options, self.config_fonts = config_colors, config_rects_gameMenu, config_options, config_fonts
@@ -84,26 +84,26 @@ class game:
         #UI
         pygame.draw.rect(self.gameDisplay, (33, 33, 33), self.config_rects_game.test_rect)
         
-class fullscreen:
+class FullScreen:
     def __init__(self, config_options, entity_variables):
         self.config_options = config_options
         self.entity_variables = entity_variables
-        
-        if config_options.display_mode == 0:
+
+        if 0 == config_options.display_mode:
             self.window()
             
-        elif config_options.display_mode == 1:
+        elif 1 == config_options.display_mode:
             self.fullscreen()
             
-        elif config_options.display_mode == 2:
+        elif 2 == config_options.display_mode:
             self.borderless_fullscreen()
         
     def borderless_fullscreen(self):
         self.config_options.height, self.config_options.width = self.entity_variables.display_height, self.entity_variables.display_width
-        print("borderless fullscreen")
+        print("borderless FullScreen")
     
     def window(self):
         print("window")
     
     def fullscreen(self):
-        print("fullscreen does not work jet")
+        print("FullScreen does not work yet")

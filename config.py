@@ -8,10 +8,10 @@ class options:
         self.height = 700 #in pixels (best multiple by 16)
         self.fps = 60 #frames per second
         self.screen_title = "a project I probably won`t finish" #the title of the window
-        self.displayer_choser = "mainMenu" #choos what display (example: mainMenu, game, inv...) to start with
+        self.displayer_choser = "MainMenu" #choos what display (example: MainMenu, game, inv...) to start with
         self.UI_scale = 1.5
-        self.display = 1
-        self.display_mode = 2 #(0, 1, 2) = (window, fullscreen, borderless_fullscreen)
+        self.display = 0
+        self.display_mode = 2 #(0, 1, 2) = (window, FullScreen, borderless_fullscreen)
         
         #player settings
         self.character_bigness = 2.5 #how big your character is
@@ -20,14 +20,14 @@ class options:
         self.player_animation_speed = 15 #after how many frames the next idle animation comes
         self.jump_lenght = 20 #how many frames you jump
         
-        #world settings
+        #World settings
         self.gravity = 5 #how many pixels you go down
         
         #map settings
         self.mountain_steepness = 60 #more meens the heights and the lowest point of mountens are further apart
         self.amount_of_sky = 5 #them amount of blocks before any land comes
         self.distance_between_raw = 10 #amount of blocks between each opensimplex noise number !!!  this must be divisible by world_width  !!!
-        self.chunk_size = 32 #how many block by how many block a chunk is
+        self.chunk_size = 32 #how many Block by how many Block a Chunk is
         self.map_width_small = 32 * 150 #width of a small map
         self.map_height_small = 32 * 10 #height of a small map
         self.map_width_medium = 32 * 200 #width of a medium map

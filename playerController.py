@@ -1,5 +1,3 @@
-import pygame
-
 class movement:
     def __init__(self, entity_variables, config_rects_game, config_options):
         self.entity_variables = entity_variables
@@ -159,12 +157,12 @@ class movement:
                 for rects in self.config_rects_game.unsolid_moverect_list:
                     rects.top -= 1
         
-        #look if your in a block
+        #look if your in a Block
         for rect in self.config_rects_game.solid_moverect_list:
             if self.config_rects_game.player_rect.colliderect(rect) == True:
                 self.in_block = True
         
-        #push you up if your stuck in a block
+        #push you up if your stuck in a Block
         if self.in_block == True:
             print("stuck")
             for rect in self.config_rects_game.solid_moverect_list:

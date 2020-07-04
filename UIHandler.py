@@ -12,7 +12,7 @@ class UIController:
                 misc.exit()
         
         if entity_variables.event_dict.get('escape_down') == True:
-                misc.menuManager(config_options, entity_variables, "gameMenu")
+                misc.menuManager(config_options, entity_variables, "GameMenu")
     
     def mainMenu(self, config_options, entity_variables):
 
@@ -28,8 +28,8 @@ class UIController:
         if entity_variables.event_dict.get('exit') == True:
             misc.exit()
             
-        if entity_variables.event_dict.get('mainMenu button') == True:
-            misc.menuManager(config_options, entity_variables, "mainMenu")
+        if entity_variables.event_dict.get('MainMenu button') == True:
+            misc.menuManager(config_options, entity_variables, "MainMenu")
         
         if entity_variables.event_dict.get('game button') == True:
             misc.menuManager(config_options, entity_variables, "game")

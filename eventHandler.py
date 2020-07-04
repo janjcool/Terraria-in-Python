@@ -26,7 +26,7 @@ class events_dict:
                             if self.config_rects.test_rect.collidepoint(event.pos):
                                 self.entity_variables.event_dict['test'] = True
                                 
-                        if self.config_options.displayer_choser == "mainMenu":
+                        if self.config_options.displayer_choser == "MainMenu":
                             if self.config_rects.start_button.collidepoint(event.pos):
                                 self.entity_variables.event_dict['start button'] = True
                             if self.config_rects.exit_button.collidepoint(event.pos):
@@ -34,11 +34,11 @@ class events_dict:
                             if self.config_rects.settings_button.collidepoint(event.pos):
                                 self.entity_variables.event_dict['settings'] = True
                                 
-                        if self.config_options.displayer_choser == "gameMenu":
+                        if self.config_options.displayer_choser == "GameMenu":
                             if self.config_rects.game_button.collidepoint(event.pos):
                                 self.entity_variables.event_dict['game button'] = True
                             if self.config_rects.mainMenu_button.collidepoint(event.pos):
-                                self.entity_variables.event_dict['mainMenu button'] = True
+                                self.entity_variables.event_dict['MainMenu button'] = True
                             
             elif event.type == pygame.KEYDOWN:
                 if event.key == self.button_class.forward_key:
