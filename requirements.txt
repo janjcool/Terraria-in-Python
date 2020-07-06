@@ -1,3 +1,4 @@
+configparser==5.0.0
+numpy==1.19.0
 opensimplex==0.3
 pygame==2.0.0.dev6
-numpy=1.19.0
