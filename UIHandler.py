@@ -1,7 +1,7 @@
 import main
 import miscellaneous as misc
 
-class UIController:
+class ButtonController:
     def __init__(self):
         self.testPressed = None
     

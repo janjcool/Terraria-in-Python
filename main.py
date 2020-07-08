@@ -8,7 +8,7 @@ import config
 import playerController
 import UIHandler
 import worldGenerator
-import renderer
+import display
 import entity
 import miscellaneous as misc
 
@@ -17,15 +17,16 @@ pygame.init()
 def main():
     display_info = pygame.display.Info()
     config_dict = misc.config(display_info)
-    renderer.FullScreen(config_dict)
+    display.FullScreen(config_dict)
     config_rects_game = config.rects_game(config_dict)
     config_rects_mainMenu = config.rects_mainMenu(config_dict)
     config_rects_gameMenu = config.rects_gameMenu(config_dict)
     config_rects_worldGen_menu = config.rects_worldGen_menu(config_dict)
-    UIcontrollor_class = UIHandler.UIController()
+    ButtonController_class = UIHandler.ButtonController()
 
     gameDisplay = pygame.display.set_mode((config_dict["window"]["window_width"], config_dict["window"]["window_height"]), flags=pygame.NOFRAME, depth=0, display=config_dict["window"]["display"]) #(size), flags, depth, display
     pygame.display.set_caption(config_dict["window"]["screen_title"])
+    renderer_class = display.renderer(gameDisplay, config_dict)
     clock = pygame.time.Clock()
 
     while config_dict["variables"]["main"]["mainloop"]:
@@ -44,10 +45,10 @@ def main():
             eventHandler.events_dict(config_rects_mainMenu, config_dict)
 
             #UI
-            UIcontrollor_class.mainMenu(config_dict)
+            ButtonController_class.mainMenu(config_dict)
 
             #render
-            renderer.MainMenu(gameDisplay, config_rects_mainMenu, config_dict)
+            renderer_class.MainMenu(config_rects_mainMenu)
 
         #=======================================================================================================================================================================================#
         elif config_dict["window"]["display_choser"] == "game":
@@ -60,9 +61,9 @@ def main():
             eventHandler.events_dict(config_rects_game, config_dict)
 
             #UI
-            UIcontrollor_class.game(config_dict)
+            ButtonController_class.game(config_dict)
 
-            if UIcontrollor_class.testPressed:
+            if ButtonController_class.testPressed:
                 print("start test button")
 
                 #worldGenerator.World(config_dict)
@@ -78,7 +79,7 @@ def main():
             config_rects_game.player_sprite = player_animation_chooser_class.player_sprite
 
             #render
-            renderer.game(gameDisplay, config_rects_game, config_dict)
+            renderer_class.game(config_rects_game)
 
         #=======================================================================================================================================================================================#
         elif config_dict["window"]["display_choser"] == "GameMenu":
@@ -91,10 +92,10 @@ def main():
             eventHandler.events_dict(config_rects_gameMenu, config_dict)
 
             #UI
-            UIcontrollor_class.gameMenu(config_dict)
+            ButtonController_class.gameMenu(config_dict)
 
             #render
-            renderer.GameMenu(gameDisplay, config_rects_gameMenu, config_dict)
+            renderer_class.GameMenu(config_rects_gameMenu)
 
         #=======================================================================================================================================================================================#
         else:

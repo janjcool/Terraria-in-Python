@@ -1,16 +1,19 @@
 import pygame
 
-class MainMenu:
-    def __init__(self, gameDisplay, config_rects_mainMenu, config_dict):
+class renderer:
+    def __init__(self, gameDisplay, config_dict):
         self.gameDisplay = gameDisplay
-        self.config_dict, self.config_rects_mainMenu = config_dict, config_rects_mainMenu
+        self.config_dict = config_dict
+    
+    def MainMenu(self, config_rects_mainMenu):
+        self.config_rects_mainMenu = config_rects_mainMenu
         
-        if config_dict["variables"]["main"]["temp_first_frame_of_new_menu"] == True:
-            self.drawer()
+        if self.config_dict["variables"]["main"]["temp_first_frame_of_new_menu"] == True:
+            self.MainMenu_drawer()
             
             pygame.display.update()
     
-    def drawer(self):
+    def MainMenu_drawer(self):
         
         #background
         self.gameDisplay.blit(self.config_rects_mainMenu.wallpaper, (0, 0))
@@ -24,18 +27,16 @@ class MainMenu:
         self.gameDisplay.blit(self.config_rects_mainMenu.start_button_text, (int(100), int(self.config_dict["window"]["window_height"]/2-300)))
         self.gameDisplay.blit(self.config_rects_mainMenu.settings_button_text, (int(100), int(self.config_dict["window"]["window_height"]/2-87)))
         self.gameDisplay.blit(self.config_rects_mainMenu.exit_button_text, (int(100), int(self.config_dict["window"]["window_height"]/2+125)))
-
-class GameMenu:
-    def __init__(self, gameDisplay, config_rects_gameMenu, config_dict):
-        self.gameDisplay = gameDisplay
-        self.config_dict, self.config_rects_gameMenu = config_dict, config_rects_gameMenu
+    
+    def GameMenu(self, config_rects_gameMenu):
+        self.config_rects_gameMenu = config_rects_gameMenu
         
-        if config_dict["variables"]["main"]["temp_first_frame_of_new_menu"] == True:
-            self.drawer()
+        if self.config_dict["variables"]["main"]["temp_first_frame_of_new_menu"] == True:
+            self.GameMenu_drawer()
             
             pygame.display.update()
     
-    def drawer(self):
+    def GameMenu_drawer(self):
         
         #background
         self.gameDisplay.blit(self.config_rects_gameMenu.wallpaper, (0, 0))
@@ -49,17 +50,15 @@ class GameMenu:
         self.gameDisplay.blit(self.config_rects_gameMenu.play_button_text, (int(self.config_dict["window"]["window_width"]/2-125), int(self.config_dict["window"]["window_height"]/2-300)))
         self.gameDisplay.blit(self.config_rects_gameMenu.settings_button_text, (int(self.config_dict["window"]["window_width"]/2-225), int(self.config_dict["window"]["window_height"]/2-125)))
         self.gameDisplay.blit(self.config_rects_gameMenu.mainMenu_button_text, (int(self.config_dict["window"]["window_width"]/2-125), int(self.config_dict["window"]["window_height"]/2+25)))
-
-class game:
-    def __init__(self, gameDisplay, config_rects_game, config_dict):
-        self.gameDisplay = gameDisplay
-        self.config_dict, self.config_rects_game = config_dict, config_rects_game
         
-        self.drawer()
+    def game(self, config_rects_game):
+        self.config_rects_game = config_rects_game
+        
+        self.game_drawer()
         
         pygame.display.update()
-    
-    def drawer(self):
+
+    def game_drawer(self):
          
         #background
         self.gameDisplay.blit(self.config_rects_game.wallpaper, (0, 0))
