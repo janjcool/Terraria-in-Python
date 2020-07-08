@@ -1,8 +1,8 @@
 class movement:
-    def __init__(self, entity_variables, config_rects_game, config_options):
+    def __init__(self, entity_variables, config_rects_game, config_dict):
         self.entity_variables = entity_variables
         self.config_rects_game = config_rects_game
-        self.config_options = config_options
+        self.config_dict = config_dict
         
         self.gravity_movement_allow = True
         self.jumping = False
@@ -40,19 +40,19 @@ class movement:
 
         #add movement of wasd
         if self.entity_variables.w_down: # w is disabled
-            self.player_y -= 0 * self.config_options.player_speed
+            self.player_y -= 0 * self.config_dict["player"]["player_speed"]
         elif self.entity_variables.s_down: # s is disabled
-            self.player_y += 0 * self.config_options.player_speed 
+            self.player_y += 0 * self.config_dict["player"]["player_speed"]
         elif self.entity_variables.a_down: # a is enabled
             if self.entity_variables.ctrl_down:
-                self.player_x -= 1 * self.config_options.player_crouching_speed
+                self.player_x -= 1 * self.config_dict["player"]["player_crouching_speed"]
             else:
-                self.player_x -= 1 * self.config_options.player_speed
+                self.player_x -= 1 * self.config_dict["player"]["player_speed"]
         elif self.entity_variables.d_down: # d is enabled
             if self.entity_variables.ctrl_down:
-                self.player_x += 1 * self.config_options.player_crouching_speed
+                self.player_x += 1 * self.config_dict["player"]["player_crouching_speed"]
             else:
-                self.player_x += 1 * self.config_options.player_speed
+                self.player_x += 1 * self.config_dict["player"]["player_speed"]
             
         #calculate crouching
         if self.entity_variables.temp_player_crouching == True:
@@ -77,15 +77,15 @@ class movement:
         
         #calculate jump
         if self.entity_variables.space_down:
-            if self.player_on_the_ground == True and self.entity_variables.temp_jump_lenght != 0:
-                self.entity_variables.temp_jump_lenght = 0
+            if self.player_on_the_ground == True and self.entity_variables.temp_jump_length != 0:
+                self.entity_variables.temp_jump_length = 0
                 self.entity_variables.can_jump = True
             if self.entity_variables.space_down:
-                if self.entity_variables.temp_jump_lenght == self.config_options.jump_lenght:
+                if self.entity_variables.temp_jump_length == self.config_dict["player"]["jump_lenght"]:
                     self.entity_variables.can_jump = False
                     self.middle_player_jump = True
                 if self.entity_variables.can_jump == True:
-                    self.entity_variables.temp_jump_lenght += 1
+                    self.entity_variables.temp_jump_length += 1
                     self.player_y -= 5
                     self.jumping = True
         
@@ -106,17 +106,17 @@ class movement:
         if self.jumping != True:  
             #look if you can add gravity
             for rects in self.config_rects_game.solid_moverect_list:
-                rects.top -= self.config_options.gravity
+                rects.top -= self.config_dict["world"]["gravity"]
                 if self.config_rects_game.player_rect.colliderect(rects) == True:
                     self.gravity_movement_allow = False
-                rects.top += self.config_options.gravity
+                rects.top += self.config_dict["world"]["gravity"]
 
             #add gravity
             if self.gravity_movement_allow == True:
                 for rects in self.config_rects_game.solid_moverect_list:
-                    rects.top -= self.config_options.gravity
+                    rects.top -= self.config_dict["world"]["gravity"]
                 for rects in self.config_rects_game.unsolid_moverect_list:
-                    rects.top -= self.config_options.gravity
+                    rects.top -= self.config_dict["world"]["gravity"]
         
         #look if you can add button movement
         for rect in self.config_rects_game.solid_moverect_list:
@@ -166,6 +166,6 @@ class movement:
         if self.in_block == True:
             print("stuck")
             for rect in self.config_rects_game.solid_moverect_list:
-                rect.top += self.config_options.gravity
+                rect.top += self.config_dict["world"]["gravity"]
             for rect in self.config_rects_game.unsolid_moverect_list:
-                rect.top += self.config_options.gravity
+                rect.top += self.config_dict["world"]["gravity"]

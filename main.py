@@ -1,26 +1,32 @@
 from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
-import sprintLoader, eventHandler, config, playerController, UIHandler, worldGenerator, renderer, entity
 import pygame
+
+import sprintLoader
+import eventHandler
+import config
+import playerController
+import UIHandler
+import worldGenerator
+import renderer
+import entity
+import miscellaneous as misc
+
 pygame.init()
 
 def main():
+    config_dict = misc.config()
     display_info = pygame.display.Info()
-    config_options = config.options()
     entity_variables = entity.Variables(display_info)
-    fullscreen_class = renderer.FullScreen(config_options, entity_variables)
-    config_colors = config.colors()
-    config_fonts = config.fonts(config_options)
-    config_rects_game = config.rects_game(config_options)
-    config_rects_mainMenu = config.rects_mainMenu(config_options, config_colors, config_fonts)
-    config_rects_gameMenu = config.rects_gameMenu(config_options, config_colors, config_fonts)
-    config_rects_worldGen_menu = config.rects_worldGen_menu(config_options)
-    UIcontrolor_class = UIHandler.UIController()
+    renderer.FullScreen(config_dict, entity_variables)
+    config_rects_game = config.rects_game(config_dict)
+    config_rects_mainMenu = config.rects_mainMenu(config_dict)
+    config_rects_gameMenu = config.rects_gameMenu(config_dict)
+    config_rects_worldGen_menu = config.rects_worldGen_menu(config_dict)
+    UIcontrollor_class = UIHandler.UIController()
 
-    button_class = config.buttons()
-
-    gameDisplay = pygame.display.set_mode((config_options.width, config_options.height), flags=pygame.NOFRAME, depth=0, display=config_options.display) #(size), flags, depth, display
-    pygame.display.set_caption(config_options.screen_title)
+    gameDisplay = pygame.display.set_mode((config_dict["window"]["window_width"], config_dict["window"]["window_height"]), flags=pygame.NOFRAME, depth=0, display=config_dict["window"]["display"]) #(size), flags, depth, display
+    pygame.display.set_caption(config_dict["window"]["screen_title"])
     clock = pygame.time.Clock()
 
     while entity_variables.mainloop:
@@ -28,74 +34,74 @@ def main():
         entity_variables.events = pygame.event.get()
 
         #=======================================================================================================================================================================================#
-        if config_options.displayer_choser == "MainMenu":
+        if config_dict["window"]["display_choser"] == "MainMenu":
 
             #get if this is the first frame in temp_first_frame_of_new_menu
             entity_variables.temp_first_frame_of_new_menu = entity_variables.first_frame_of_new_menu
             entity_variables.first_frame_of_new_menu = False
 
             #event class
-            event_class_mainMenu = eventHandler.events_dict(entity_variables, config_options, config_rects_mainMenu, button_class)
+            eventHandler.events_dict(entity_variables, config_rects_mainMenu, config_dict)
 
             #UI
-            UIcontrolor_class.mainMenu(config_options, entity_variables)
+            UIcontrollor_class.mainMenu(config_dict, entity_variables)
 
             #render
-            renderer.MainMenu(gameDisplay, config_rects_mainMenu, config_colors, config_options, config_fonts, entity_variables)
+            renderer.MainMenu(gameDisplay, config_rects_mainMenu, config_dict, entity_variables)
 
         #=======================================================================================================================================================================================#
-        elif config_options.displayer_choser == "game":
+        elif config_dict["window"]["display_choser"] == "game":
 
             #get if this is the first frame in temp_first_frame_of_new_menu
             entity_variables.temp_first_frame_of_new_menu = entity_variables.first_frame_of_new_menu
             entity_variables.first_frame_of_new_menu = False
 
             #event class
-            event_class_game = eventHandler.events_dict(entity_variables, config_options, config_rects_game, button_class)
+            eventHandler.events_dict(entity_variables, config_rects_game, config_dict)
 
             #UI
-            UIcontrolor_class.game(config_options, entity_variables)
+            UIcontrollor_class.game(config_dict, entity_variables)
 
-            if UIcontrolor_class.testPressed:
+            if UIcontrollor_class.testPressed:
                 print("start test button")
 
-                worldGenerator_class = worldGenerator.World(config_options, entity_variables)
+                #worldGenerator.World(config_dict, entity_variables)
                 print("does nothing right now")
 
                 print("end test button")
 
             #playerController class
-            playerController_class = playerController.movement(entity_variables, config_rects_game, config_options)
+            playerController_class = playerController.movement(entity_variables, config_rects_game, config_dict)
 
             #player animation class
-            player_animation_chooser_class = sprintLoader.player_animation_chooser(playerController_class, entity_variables, config_options)
+            player_animation_chooser_class = sprintLoader.player_animation_chooser(playerController_class, entity_variables, config_dict)
             config_rects_game.player_sprite = player_animation_chooser_class.player_sprite
 
             #render
-            renderer.game(gameDisplay, config_rects_game, config_colors, config_options, config_fonts, entity_variables)
+            renderer.game(gameDisplay, config_rects_game, config_dict, entity_variables)
 
         #=======================================================================================================================================================================================#
-        elif config_options.displayer_choser == "GameMenu":
+        elif config_dict["window"]["display_choser"] == "GameMenu":
 
             #get if this is the first frame in temp_first_frame_of_new_menu
             entity_variables.temp_first_frame_of_new_menu = entity_variables.first_frame_of_new_menu
             entity_variables.first_frame_of_new_menu = False
 
             #event class
-            event_class_gameMenu = eventHandler.events_dict(entity_variables, config_options, config_rects_gameMenu, button_class)
+            eventHandler.events_dict(entity_variables, config_rects_gameMenu, config_dict)
 
             #UI
-            UIcontrolor_class.gameMenu(config_options, entity_variables)
+            UIcontrollor_class.gameMenu(config_dict, entity_variables)
 
             #render
-            renderer.GameMenu(gameDisplay, config_rects_gameMenu, config_colors, config_options, config_fonts, entity_variables)
+            renderer.GameMenu(gameDisplay, config_rects_gameMenu, config_dict, entity_variables)
 
         #=======================================================================================================================================================================================#
         else:
-            print("config_options.displayer_choser type not supported -->" + str(config_options.displayer_choser) + "<-- types that are suported: game, MainMenu")
+            print('config_dict["window"]["display_choser"] type not supported -->' + str(config_dict["window"]["display_choser"]) + '<-- types that are supported: game, MainMenu')
 
 
-        entity_variables.deltatime = clock.tick(config_options.fps) #delta time is x milliseconds since the previous call
+        entity_variables.deltatime = clock.tick(config_dict["window"]["fps"]) #delta time is x milliseconds since the previous call
 
 if __name__ == '__main__':
     main()
