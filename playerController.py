@@ -1,6 +1,5 @@
 class movement:
-    def __init__(self, entity_variables, config_rects_game, config_dict):
-        self.entity_variables = entity_variables
+    def __init__(self, config_rects_game, config_dict):
         self.config_rects_game = config_rects_game
         self.config_dict = config_dict
         
@@ -23,50 +22,50 @@ class movement:
         self.main()
     
     def main(self):        
-        movement_event_happened = self.entity_variables.event_dict.get('movement_event_happened')
-        ctrl_event_happened = self.entity_variables.event_dict.get('ctrl_event_happened')
-        space_event_happened = self.entity_variables.event_dict.get('space_event_happened')
+        movement_event_happened = self.config_dict["variables"]["general"]["event_dict"].get('movement_event_happened')
+        ctrl_event_happened = self.config_dict["variables"]["general"]["event_dict"].get('ctrl_event_happened')
+        space_event_happened = self.config_dict["variables"]["general"]["event_dict"].get('space_event_happened')
         
         if movement_event_happened != False:
-            self.entity_variables.w_down = self.entity_variables.event_dict.get('w_down')
-            self.entity_variables.s_down = self.entity_variables.event_dict.get('s_down')
-            self.entity_variables.a_down = self.entity_variables.event_dict.get('a_down')
-            self.entity_variables.d_down = self.entity_variables.event_dict.get('d_down')
+            self.config_dict["variables"]["playerController"]["w_down"] = self.config_dict["variables"]["general"]["event_dict"].get('w_down')
+            self.config_dict["variables"]["playerController"]["s_down"] = self.config_dict["variables"]["general"]["event_dict"].get('s_down')
+            self.config_dict["variables"]["playerController"]["a_down"] = self.config_dict["variables"]["general"]["event_dict"].get('a_down')
+            self.config_dict["variables"]["playerController"]["d_down"] = self.config_dict["variables"]["general"]["event_dict"].get('d_down')
             
         if ctrl_event_happened != False:
-            self.entity_variables.ctrl_down = self.entity_variables.event_dict.get('ctrl_down')
+            self.config_dict["variables"]["playerController"]["ctrl_down"] = self.config_dict["variables"]["general"]["event_dict"].get('ctrl_down')
         if space_event_happened != False:
-            self.entity_variables.space_down = self.entity_variables.event_dict.get('space_down')
+            self.config_dict["variables"]["playerController"]["space_down"] = self.config_dict["variables"]["general"]["event_dict"].get('space_down')
 
         #add movement of wasd
-        if self.entity_variables.w_down: # w is disabled
+        if self.config_dict["variables"]["playerController"]["w_down"]: # w is disabled
             self.player_y -= 0 * self.config_dict["player"]["player_speed"]
-        elif self.entity_variables.s_down: # s is disabled
+        elif self.config_dict["variables"]["playerController"]["s_down"]: # s is disabled
             self.player_y += 0 * self.config_dict["player"]["player_speed"]
-        elif self.entity_variables.a_down: # a is enabled
-            if self.entity_variables.ctrl_down:
+        elif self.config_dict["variables"]["playerController"]["a_down"]: # a is enabled
+            if self.config_dict["variables"]["playerController"]["ctrl_down"]:
                 self.player_x -= 1 * self.config_dict["player"]["player_crouching_speed"]
             else:
                 self.player_x -= 1 * self.config_dict["player"]["player_speed"]
-        elif self.entity_variables.d_down: # d is enabled
-            if self.entity_variables.ctrl_down:
+        elif self.config_dict["variables"]["playerController"]["d_down"]: # d is enabled
+            if self.config_dict["variables"]["playerController"]["ctrl_down"]:
                 self.player_x += 1 * self.config_dict["player"]["player_crouching_speed"]
             else:
                 self.player_x += 1 * self.config_dict["player"]["player_speed"]
             
         #calculate crouching
-        if self.entity_variables.temp_player_crouching == True:
+        if self.config_dict["variables"]["playerController"]["temp_player_crouching"] == True:
             self.config_rects_game.player_rect.height += 32
             self.config_rects_game.player_rect.top -= 32
             
         
-        if self.entity_variables.ctrl_down:
+        if self.config_dict["variables"]["playerController"]["ctrl_down"]:
             self.config_rects_game.player_rect.height -= 32
             self.config_rects_game.player_rect.top += 32
             self.player_crouching = True
-            self.entity_variables.temp_player_crouching = True
+            self.config_dict["variables"]["playerController"]["temp_player_crouching"] = True
         else:
-            self.entity_variables.temp_player_crouching = False
+            self.config_dict["variables"]["playerController"]["temp_player_crouching"] = False
         
         #look if player is on the ground
         for rects in self.config_rects_game.solid_moverect_list:
@@ -76,16 +75,16 @@ class movement:
             rects.top += 1
         
         #calculate jump
-        if self.entity_variables.space_down:
-            if self.player_on_the_ground == True and self.entity_variables.temp_jump_length != 0:
-                self.entity_variables.temp_jump_length = 0
-                self.entity_variables.can_jump = True
-            if self.entity_variables.space_down:
-                if self.entity_variables.temp_jump_length == self.config_dict["player"]["jump_lenght"]:
-                    self.entity_variables.can_jump = False
+        if self.config_dict["variables"]["playerController"]["space_down"]:
+            if self.player_on_the_ground == True and self.config_dict["variables"]["playerController"]["temp_jump_length"] != 0:
+                self.config_dict["variables"]["playerController"]["temp_jump_length"] = 0
+                self.config_dict["variables"]["playerController"]["can_jump"] = True
+            if self.config_dict["variables"]["playerController"]["space_down"]:
+                if self.config_dict["variables"]["playerController"]["temp_jump_length"] == self.config_dict["player"]["jump_lenght"]:
+                    self.config_dict["variables"]["playerController"]["can_jump"] = False
                     self.middle_player_jump = True
-                if self.entity_variables.can_jump == True:
-                    self.entity_variables.temp_jump_length += 1
+                if self.config_dict["variables"]["playerController"]["can_jump"] == True:
+                    self.config_dict["variables"]["playerController"]["temp_jump_length"] += 1
                     self.player_y -= 5
                     self.jumping = True
         

@@ -35,37 +35,3 @@ class World:
 
     def find_block(self, x, y):
         print("does nothing yet")
-
-
-class Variables:
-    def __init__(self, display_info):
-
-        self.display_info = display_info
-        self.map_width = 32 * 200  # the map width
-        self.map_height = 32 * 12  # the map height
-        self.seed = 1  # seed
-        self.display_width = self.display_info.current_w - 100  # width of your screen
-        self.display_height = self.display_info.current_h - 100  # height of your screen
-        self.first_frame_of_new_menu = True  # if True then this is the first frame of a new menu
-        self.temp_first_frame_of_new_menu = True  # temp version of previous variable
-        self.events = []
-        self.event_dict = {}
-
-        # playerController
-        self.temp_jump_length = 0
-        self.can_jump = True
-        self.temp_player_crouching = True
-        self.w_down = False
-        self.s_down = False
-        self.a_down = False
-        self.d_down = False
-        self.ctrl_down = False
-        self.space_down = False
-
-        # sprintLoader
-        self.player_sprite_number = 0
-        self.player_animation_timer = 0
-
-        # main
-        self.deltatime = 0
-        self.mainloop = True

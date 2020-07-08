@@ -1,14 +1,13 @@
 import pygame
 
 class player_animation_chooser:
-    def __init__(self, playerController_class, entity_variables, config_dict):
+    def __init__(self, playerController_class, config_dict):
         self.config_dict = config_dict
-        self.entity_variables = entity_variables
         
-        if self.entity_variables.player_animation_timer == self.config_dict["player"]["player_animation_speed"]:
-            self.entity_variables.player_animation_timer = 0
+        if self.config_dict["variables"]["sprintLoader"]["player_animation_timer"] == self.config_dict["player"]["player_animation_speed"]:
+            self.config_dict["variables"]["sprintLoader"]["player_animation_timer"] = 0
         else:
-            self.entity_variables.player_animation_timer += 1
+            self.config_dict["variables"]["sprintLoader"]["player_animation_timer"] += 1
         
         
         if playerController_class.player_crouching and playerController_class.player_running_to_left:
@@ -45,12 +44,12 @@ class player_animation_chooser:
         animation_list = []
         
         if more_than_1_sprite:
-            if 0 == self.entity_variables.player_animation_timer:
-                self.entity_variables.player_sprite_number += 1
-            if self.entity_variables.player_sprite_number >= amount_of_sprites:
-                self.entity_variables.player_sprite_number = 0
+            if 0 == self.config_dict["variables"]["sprintLoader"]["player_animation_timer"]:
+                self.config_dict["variables"]["sprintLoader"]["player_sprite_number"] += 1
+            if self.config_dict["variables"]["sprintLoader"]["player_sprite_number"] >= amount_of_sprites:
+                self.config_dict["variables"]["sprintLoader"]["player_sprite_number"] = 0
         else:
-            self.entity_variables.player_sprite_number = sprite_number
+            self.config_dict["variables"]["sprintLoader"]["player_sprite_number"] = sprite_number
         
         for x in range(0, amount_of_sprites):
             temp_animation = pygame.image.load("art-assets/player/sprites/adventurer-" + animation_type + "-0" + str(x) + ".png")
@@ -60,7 +59,7 @@ class player_animation_chooser:
             
             animation_list.append(temp_animation)
         
-        if self.entity_variables.player_sprite_number > (amount_of_sprites - 1):
-                self.entity_variables.player_sprite_number = 0
+        if self.config_dict["variables"]["sprintLoader"]["player_sprite_number"] > (amount_of_sprites - 1):
+                self.config_dict["variables"]["sprintLoader"]["player_sprite_number"] = 0
                 
-        self.player_sprite = animation_list[self.entity_variables.player_sprite_number]
+        self.player_sprite = animation_list[self.config_dict["variables"]["sprintLoader"]["player_sprite_number"]]

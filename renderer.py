@@ -1,11 +1,11 @@
 import pygame
 
 class MainMenu:
-    def __init__(self, gameDisplay, config_rects_mainMenu, config_dict, entity_variables):
+    def __init__(self, gameDisplay, config_rects_mainMenu, config_dict):
         self.gameDisplay = gameDisplay
         self.config_dict, self.config_rects_mainMenu = config_dict, config_rects_mainMenu
         
-        if entity_variables.temp_first_frame_of_new_menu == True:
+        if config_dict["variables"]["main"]["temp_first_frame_of_new_menu"] == True:
             self.drawer()
             
             pygame.display.update()
@@ -26,11 +26,11 @@ class MainMenu:
         self.gameDisplay.blit(self.config_rects_mainMenu.exit_button_text, (int(100), int(self.config_dict["window"]["window_height"]/2+125)))
 
 class GameMenu:
-    def __init__(self, gameDisplay, config_rects_gameMenu, config_dict, entity_variables):
+    def __init__(self, gameDisplay, config_rects_gameMenu, config_dict):
         self.gameDisplay = gameDisplay
         self.config_dict, self.config_rects_gameMenu = config_dict, config_rects_gameMenu
         
-        if entity_variables.temp_first_frame_of_new_menu == True:
+        if config_dict["variables"]["main"]["temp_first_frame_of_new_menu"] == True:
             self.drawer()
             
             pygame.display.update()
@@ -51,7 +51,7 @@ class GameMenu:
         self.gameDisplay.blit(self.config_rects_gameMenu.mainMenu_button_text, (int(self.config_dict["window"]["window_width"]/2-125), int(self.config_dict["window"]["window_height"]/2+25)))
 
 class game:
-    def __init__(self, gameDisplay, config_rects_game, config_dict, entity_variables):
+    def __init__(self, gameDisplay, config_rects_game, config_dict):
         self.gameDisplay = gameDisplay
         self.config_dict, self.config_rects_game = config_dict, config_rects_game
         
@@ -85,7 +85,7 @@ class game:
         pygame.draw.rect(self.gameDisplay, (33, 33, 33), self.config_rects_game.test_rect)
         
 class FullScreen:
-    def __init__(self, config_dict, entity_variables):
+    def __init__(self, config_dict):
 
         if 0 == config_dict["window"]["display_mode"]:
             print("window")
@@ -94,5 +94,5 @@ class FullScreen:
             print("FullScreen does not work yet")
             
         elif 2 == config_dict["window"]["display_mode"]:
-            config_dict["window"]["window_height"], config_dict["window"]["window_width"] = entity_variables.display_height, entity_variables.display_width
+            config_dict["window"]["window_height"], config_dict["window"]["window_width"] = config_dict["window"]["display_height"], config_dict["window"]["display_width"]
             print("borderless FullScreen")
