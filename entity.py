@@ -30,8 +30,8 @@ class World:
         self.world = numpy.empty((5, 5), dtype=object)
 
     def find_chunk(self, block_pos=(5, 5)):
-        self.pos_chunk = [int((block_pos[0] - 0.1) / self.config_dict["worldGen"]["chunk_size"]),
-                          int((block_pos[1] - 0.1) / self.config_dict["worldGen"]["chunk_size"])]  # x, y
+        self.pos_chunk = [int((block_pos[0] - 0.1) / self.config_dict["worldGen"]["chunk_size"]), # x
+                          int((block_pos[1] - 0.1) / self.config_dict["worldGen"]["chunk_size"])] # y
 
     def find_block(self, x, y):
         print("does nothing yet")

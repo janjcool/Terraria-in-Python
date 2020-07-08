@@ -41,13 +41,13 @@ class GameMenu:
         self.gameDisplay.blit(self.config_rects_gameMenu.wallpaper, (0, 0))
         
         #debugging
-        pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.config_rects_gameMenu.game_button) 
-        pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.config_rects_gameMenu.mainMenu_button) 
-        pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.config_rects_gameMenu.settings_button) 
+        #pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.config_rects_gameMenu.game_button)
+        #pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.config_rects_gameMenu.mainMenu_button)
+        #pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.config_rects_gameMenu.settings_button)
         
         #UI
         self.gameDisplay.blit(self.config_rects_gameMenu.play_button_text, (int(self.config_dict["window"]["window_width"]/2-125), int(self.config_dict["window"]["window_height"]/2-300)))
-        self.gameDisplay.blit(self.config_rects_gameMenu.settings_button_text, (int(self.config_dict["window"]["window_width"]/2-125), int(self.config_dict["window"]["window_height"]/2-125)))
+        self.gameDisplay.blit(self.config_rects_gameMenu.settings_button_text, (int(self.config_dict["window"]["window_width"]/2-225), int(self.config_dict["window"]["window_height"]/2-125)))
         self.gameDisplay.blit(self.config_rects_gameMenu.mainMenu_button_text, (int(self.config_dict["window"]["window_width"]/2-125), int(self.config_dict["window"]["window_height"]/2+25)))
 
 class game:

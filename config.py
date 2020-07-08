@@ -51,11 +51,11 @@ class rects_gameMenu:
         self.wallpaper = pygame.transform.scale(self.wallpaper, (config_dict["window"]["window_width"], config_dict["window"]["window_height"]))
         
         #buttons
-        self.game_button = pygame.Rect(int(config_dict["window"]["window_width"]/2-125), int(config_dict["window"]["window_height"]/2-125), 250, 100)
-        self.mainMenu_button = pygame.Rect(int(config_dict["window"]["window_width"]/2-125), int(config_dict["window"]["window_height"]/2+25), 250, 100)
-        self.settings_button = pygame.Rect(int(config_dict["window"]["window_width"]/2-125), int(config_dict["window"]["window_height"]/2+25), 250, 100)
+        self.game_button = pygame.Rect(int(config_dict["window"]["window_width"]/2-150), int(config_dict["window"]["window_height"]/2-275), 300, 150)
+        self.settings_button = pygame.Rect(int(config_dict["window"]["window_width"]/2-250), int(config_dict["window"]["window_height"]/2-124), 550, 173)
+        self.mainMenu_button = pygame.Rect(int(config_dict["window"]["window_width"]/2-150), int(config_dict["window"]["window_height"]/2+50), 300, 150)
         
-        self.mainMenu_button_text = pygame.font.Font('art-assets/fonts/Arial.TTF', int(150)).render('exit', True, (150, 150, 150))
+        self.mainMenu_button_text = pygame.font.Font('art-assets/fonts/Arial.TTF', int(150)).render('exit', True, config_dict["colors"]["white"])
         self.settings_button_text = pygame.font.Font('art-assets/fonts/Arial.TTF', int(150)).render('settings', True, config_dict["colors"]["white"])
         self.play_button_text = pygame.font.Font('art-assets/fonts/Arial.TTF', int(150)).render('play', True, config_dict["colors"]["white"])
 
