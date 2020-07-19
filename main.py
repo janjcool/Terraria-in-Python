@@ -23,6 +23,7 @@ def main():
     config_rects_gameMenu = config.rects_gameMenu(config_dict)
     config_rects_worldGen_menu = config.rects_worldGen_menu(config_dict)
     ButtonController_class = UIHandler.ButtonController()
+    world = {}
 
     gameDisplay = pygame.display.set_mode((config_dict["window"]["window_width"], config_dict["window"]["window_height"]), flags=pygame.NOFRAME, depth=0, display=config_dict["window"]["display"]) #(size), flags, depth, display
     pygame.display.set_caption(config_dict["window"]["screen_title"])
@@ -66,8 +67,8 @@ def main():
             if ButtonController_class.testPressed:
                 print("start test button")
 
-                #worldGenerator.World(config_dict)
-                print("does nothing right now")
+                worldGenerator.World(config_dict, world)
+                #print("does nothing right now")
 
                 print("end test button")
 

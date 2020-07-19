@@ -35,8 +35,8 @@ def config(display_info):
                 elif x == "colors":
                     color_list = []
                     
-                    for i in config[str(x)][str(y)].split(", "):
-                        color_list.append(int(i))
+                    for k in config[str(x)][str(y)].split(", "):
+                        color_list.append(int(k))
                     dictionary[str(y)] = color_list
                 
                 elif config[str(x)][str(y)] == "False":
@@ -48,7 +48,6 @@ def config(display_info):
                 else:
                     dictionary[str(y)] = config[str(x)][str(y)]
                     
-            print(dictionary)
             if x == "window":
                 dictionary["display_width"] = display_info.current_w - 100
                 dictionary["display_height"] = display_info.current_h - 100
@@ -63,8 +62,8 @@ def config(display_info):
                 variables[str(x)] = dictionary
             elif i == "template.ini":
                 templates[str(x)] = dictionary
-
-    config_dict["entity_variables"] = variables
+                
+    config_dict["variables"] = variables
     config_dict["template"] = templates
 
     return config_dict
@@ -85,4 +84,17 @@ def isint(x):
         return False
     else:
         return a == b
+
+def gridmaker(x_range, y_range, append = []):
+    width = []
+                
+    for x in range(0, int(x_range)):
+        height = []
+        
+        for y in range(0, int(y_range)):                
+            height.append(append)
+        
+        width.append(height)
+    
+    return width
         

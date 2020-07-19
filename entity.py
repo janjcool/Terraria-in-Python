@@ -1,5 +1,4 @@
-import numpy
-
+import miscellaneous as misc
 
 class Block:
     def __init__(self, block_type, a_chunk_pos, a_block_pos):
@@ -22,16 +21,27 @@ class Chunk:
 
 
 class World:
-    def __init__(self, height, width, config_dict):
-        self.height = height
-        self.width = width
+    def __init__(self, config_dict):
         self.config_dict = config_dict
 
-        self.world = numpy.empty((5, 5), dtype=object)
-
-    def find_chunk(self, block_pos=(5, 5)):
-        self.pos_chunk = [int((block_pos[0] - 0.1) / self.config_dict["worldGen"]["chunk_size"]), # x
-                          int((block_pos[1] - 0.1) / self.config_dict["worldGen"]["chunk_size"])] # y
+    def find_chunk(self, block_pos=(5, 5)): #height, width
+        return (int((block_pos[0] - 0.1) / self.config_dict["worldGen"]["chunk_size"]), # x
+                int((block_pos[1] - 0.1) / self.config_dict["worldGen"]["chunk_size"])) # y
 
     def find_block(self, x, y):
         print("does nothing yet")
+        
+    def make_block(self, block_type, pos):
+        if  not (isinstance(block_type, str) and isinstance(pos, tuple)):
+            print("world.make_block wrong type:")
+            print("    " + str(block_type) + ": " + str(type(block_type)))
+            print("    " + str(pos) + ": " + str(type(pos)))
+            
+        return [block_type, pos]
+
+    def make_chunk(self):
+        return misc.gridmaker(self.config_dict["worldGen"]["chunk_size"], self.config_dict["worldGen"]["chunk_size"])
+
+    def make_chunks(self):
+        chunk = self.make_chunk()
+        return misc.gridmaker(self.config_dict["variables"]["general"]["map_width"], self.config_dict["variables"]["general"]["map_height"], chunk)

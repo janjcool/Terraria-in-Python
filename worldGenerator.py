@@ -1,16 +1,19 @@
 from opensimplex import OpenSimplex
 import entity
 import numpy
+import sys
 
 class World:
-    def __init__(self, config_dict):
+    def __init__(self, config_dict, world):
         self.config_dict = config_dict
-        self.world_class = entity.World(config_dict["variables"]["general"]["map_height"], config_dict["variables"]["general"]["map_width"], config_dict)
-        #self.World = self.world_class.World
+        self.world_class = entity.World(config_dict)
+        self.world = world
         
         self.mapHeight_maker()
-        self.chunk_maker()
+        self.world["world"] = self.world_class.make_chunks()
         self.make_sheet_with_cordinats()
+        
+        print(sys.getsizeof(self.world["world"]))
 
     def mapHeight_maker(self):
         self.raw_mapHeight = []
@@ -37,13 +40,6 @@ class World:
                 value = temp_difference_between_point + temp_value
                 temp_value = value
                 self.mapHeight.append(int(value+self.raw_mapHeight[x]))
-                
-    def chunk_maker(self):
-        self.world_class.world = self.world = numpy.empty( (int(self.config_dict["variables"]["general"]["map_height"]/self.config_dict["worldGen"]["chunk_size"]), int(self.config_dict["variables"]["general"]["map_width"]/self.config_dict["worldGen"]["chunk_size"])), dtype=object)
-        
-        for x in range(0, int(self.config_dict["variables"]["general"]["map_height"]/self.config_dict["worldGen"]["chunk_size"])):
-            for y in range(0, int(self.config_dict["variables"]["general"]["map_width"]/self.config_dict["worldGen"]["chunk_size"])):                
-                self.world_class.world[x, y] = entity.Chunk((x, y), self.config_dict)
     
     def make_sheet_with_cordinats(self):
         
@@ -51,21 +47,21 @@ class World:
         counter = 0
         for x in self.mapHeight:
             for y in range(0, self.config_dict["worldGen"]["amount_of_sky"]): #add sky
-                self.world_class.find_chunk((y,counter))
-                temp_block_pos = [(y-self.world_class.pos_chunk[0]*self.config_dict["worldGen"]["chunk_size"])-1, (counter-self.world_class.pos_chunk[1]*self.config_dict["worldGen"]["chunk_size"])-1]
-                temp_block = entity.Block("sky", self.world_class.pos_chunk, temp_block_pos)
-                self.world_class.world[self.world_class.pos_chunk[0], self.world_class.pos_chunk[1]].add_block(temp_block, (temp_block_pos[0], temp_block_pos[1]))          
+                temp_chunk_pos = self.world_class.find_chunk((y,counter))
+                temp_block_pos_in_chunk = ((y-temp_chunk_pos[0]*self.config_dict["worldGen"]["chunk_size"])-1, (counter-temp_chunk_pos[1]*self.config_dict["worldGen"]["chunk_size"])-1)
+                temp_block = self.world_class.make_block("sky", temp_block_pos_in_chunk)
+                self.world["world"][temp_chunk_pos[0]][temp_chunk_pos[1]][temp_block_pos_in_chunk[0]][temp_block_pos_in_chunk[1]] = temp_block
 
             for i in range(0, x): #add more sky
-                self.world_class.find_chunk((y + i,counter))
-                temp_block_pos = [(y + i-self.world_class.pos_chunk[0]*self.config_dict["worldGen"]["chunk_size"])-1, (counter-self.world_class.pos_chunk[1]*self.config_dict["worldGen"]["chunk_size"])-1]
-                temp_block = entity.Block("sky", self.world_class.pos_chunk, temp_block_pos)
-                self.world_class.world[self.world_class.pos_chunk[0], self.world_class.pos_chunk[1]].add_block(temp_block, (temp_block_pos[0], temp_block_pos[1]))    
+                temp_chunk_pos = self.world_class.find_chunk((y + i,counter))
+                temp_block_pos_in_chunk = ((y + i-temp_chunk_pos[0]*self.config_dict["worldGen"]["chunk_size"])-1, (counter-temp_chunk_pos[1]*self.config_dict["worldGen"]["chunk_size"])-1)
+                temp_block = self.world_class.make_block("sky", temp_block_pos_in_chunk)   
+                self.world["world"][temp_chunk_pos[0]][temp_chunk_pos[1]][temp_block_pos_in_chunk[0]][temp_block_pos_in_chunk[1]] = temp_block
 
             for q in range(0, self.config_dict["variables"]["general"]["map_height"]-x-self.config_dict["worldGen"]["amount_of_sky"]+2):
-                self.world_class.find_chunk((y + i + q,counter))
-                temp_block_pos = [(y + i + q-self.world_class.pos_chunk[0]*self.config_dict["worldGen"]["chunk_size"])-1, (counter-self.world_class.pos_chunk[1]*self.config_dict["worldGen"]["chunk_size"])-1]
-                temp_block = entity.Block("dirt", self.world_class.pos_chunk, temp_block_pos)
-                self.world_class.world[self.world_class.pos_chunk[0], self.world_class.pos_chunk[1]].add_block(temp_block, (temp_block_pos[0], temp_block_pos[1]))    
+                temp_chunk_pos = self.world_class.find_chunk((y + i + q,counter))
+                temp_block_pos_in_chunk = ((y + i + q-temp_chunk_pos[0]*self.config_dict["worldGen"]["chunk_size"])-1, (counter-temp_chunk_pos[1]*self.config_dict["worldGen"]["chunk_size"])-1)
+                temp_block = self.world_class.make_block("dirt", temp_block_pos_in_chunk)
+                self.world["world"][temp_chunk_pos[0]][temp_chunk_pos[1]][temp_block_pos_in_chunk[0]][temp_block_pos_in_chunk[1]] = temp_block
             
             counter += 1
