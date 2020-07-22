@@ -1,19 +1,16 @@
 from opensimplex import OpenSimplex
-import entity
 import numpy
-import sys
+import miscellaneous as misc
 
 class World:
     def __init__(self, config_dict, world):
         self.config_dict = config_dict
-        self.world_class = entity.World(config_dict)
+        self.world_class = misc.World(config_dict)
         self.world = world
         
         self.mapHeight_maker()
         self.world["world"] = self.world_class.make_chunks()
         self.make_sheet_with_cordinats()
-        
-        print(sys.getsizeof(self.world["world"]))
 
     def mapHeight_maker(self):
         self.raw_mapHeight = []

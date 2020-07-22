@@ -9,14 +9,15 @@ import playerController
 import UIHandler
 import worldGenerator
 import display
-import entity
 import miscellaneous as misc
+import fileReader
 
 pygame.init()
 
 def main():
     display_info = pygame.display.Info()
-    config_dict = misc.config(display_info)
+    config_dict = fileReader.config(display_info)
+    UI_config_dict = fileReader.UI_config_file(config_dict)
     display.FullScreen(config_dict)
     config_rects_game = config.rects_game(config_dict)
     config_rects_mainMenu = config.rects_mainMenu(config_dict)
