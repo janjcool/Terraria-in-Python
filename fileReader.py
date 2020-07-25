@@ -73,14 +73,17 @@ def UI_config_file(config_dict):
         for x in config.sections():
             temp_dictionary = {}
             
-            for y in config[str(x)]:
-                temp_list = []
-                for k in config[str(x)][str(y)].split(", "):
-                    k = misc.string_to_X(config_dict, k)
-                    temp_list.append(k)
-                    
-                temp_dictionary[str(y)] = temp_list
-        
+            if x == "options":
+                for y in config[str(x)]:
+                    temp_dictionary[str(y)] = misc.string_to_X(config_dict, config[str(x)][str(y)])
+            else:
+                for y in config[str(x)]:
+                    temp_list = []
+                    for k in config[str(x)][str(y)].split(", "):
+                        k = misc.string_to_X(config_dict, k)
+                        temp_list.append(k)
+                        
+                    temp_dictionary[str(y)] = temp_list
             dictionary[str(x)] = temp_dictionary
         UI_config_dict[str(i)] = dictionary
         
@@ -107,6 +110,8 @@ def UI_config_converter(config_dict, UI_config_dict):
                 for y in UI_config_dict[str(i)][str(x)]:
                     temp_text = pygame.font.Font(str(UI_config_dict[str(i)][str(x)][str(y)][2]), UI_config_dict[str(i)][str(x)][str(y)][3]).render(str(UI_config_dict[str(i)][str(x)][str(y)][4]), True, config_dict["colors"][str(UI_config_dict[str(i)][str(x)][str(y)][5])])
                     UI_config_dict[str(i)][str(x)][str(y)].insert(0, temp_text)
+            elif x == "options":
+                pass
             else:
                 print("one of the sections in a UI config file is wrong (this is how to wrong sections was write: " + str(x) + ")")
     

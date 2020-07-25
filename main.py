@@ -53,7 +53,7 @@ def main():
             renderer_class.MainMenu()
 
         #=======================================================================================================================================================================================#
-        elif config_dict["window"]["display_choser"] == "game":
+        elif config_dict["window"]["display_choser"] == "Game":
 
             #get if this is the first frame in temp_first_frame_of_new_menu
             config_dict["variables"]["main"]["temp_first_frame_of_new_menu"] = config_dict["variables"]["main"]["first_frame_of_new_menu"]
@@ -81,7 +81,7 @@ def main():
             UI_config_dict["Game"]["images"]["player"][0] = player_animation_chooser_class.player_sprite
 
             #render
-            renderer_class.game()
+            renderer_class.Game()
 
         #=======================================================================================================================================================================================#
         elif config_dict["window"]["display_choser"] == "GameMenu":
@@ -101,7 +101,8 @@ def main():
 
         #=======================================================================================================================================================================================#
         else:
-            print('config_dict["window"]["display_choser"] type not supported -->' + str(config_dict["window"]["display_choser"]) + '<-- types that are supported: game, MainMenu')
+            print('config_dict["window"]["display_choser"] string not supported: ' + str(config_dict["window"]["display_choser"]) + ' (types that are supported: Game, MainMenu, GameMenu)')
+            eventHandler.events_dict(UI_config_dict, config_dict)
 
 
         config_dict["variables"]["main"]["deltatime"] = clock.tick(config_dict["window"]["fps"]) #delta time is x milliseconds since the previous call

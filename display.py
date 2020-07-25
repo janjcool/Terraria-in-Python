@@ -5,81 +5,63 @@ class renderer:
         self.gameDisplay = gameDisplay
         self.config_dict = config_dict
         self.UI_config_dict = UI_config_dict
+        
+    
+    def UI_drawer(self):
+        for x in self.UI_config_dict[self.config_dict["window"]["display_choser"]]:
+            if x == "images":
+                for y in self.UI_config_dict[self.config_dict["window"]["display_choser"]][x]:
+                    if self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] == 1:
+                        self.gameDisplay.blit(self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][0],
+                                              (self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][4], 
+                                               self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][5]))
+                        self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] = 0
+            elif x == "rects":
+                for y in self.UI_config_dict[self.config_dict["window"]["display_choser"]][x]:
+                    if self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] == 1:
+                        print(self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][3])
+                        pygame.draw.rect(self.gameDisplay,
+                                         self.config_dict["colors"][self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][3]],
+                                         self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][0])
+                        self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] = 0
+            elif x == "text":
+                for y in self.UI_config_dict[self.config_dict["window"]["display_choser"]][x]:
+                    if self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] == 1:
+                        self.gameDisplay.blit(self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][0],
+                                              (self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][7], 
+                                               self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][8]))
+                        self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] = 0
+            
+            if not x == "options":
+                if self.UI_config_dict[self.config_dict["window"]["display_choser"]]["options"]["firstframe"] == True:
+                    for y in self.UI_config_dict[self.config_dict["window"]["display_choser"]][x]:
+                        self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] = 0
+    
+    def UI_redraw(self, window_type = None):
+        if window_type is None:
+            window_type = self.config_dict["window"]["display_choser"]
+        
+        for x in self.UI_config_dict[window_type]:
+            for y in self.UI_config_dict[window_type][x]:
+                self.UI_config_dict[window_type][x][y][1] = 1
     
     def MainMenu(self):
         
-        if self.config_dict["variables"]["main"]["temp_first_frame_of_new_menu"] == True:
-            self.MainMenu_drawer()
-            
-            pygame.display.update()
+        self.UI_drawer()
+        
+        pygame.display.update()
     
-    def MainMenu_drawer(self):
+    def Game(self):
         
-        #background
-        self.gameDisplay.blit(self.UI_config_dict["MainMenu"]["images"]["wallpaper"][0], (0, 0))
+        self.UI_drawer()
         
-        #debugging
-        #pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.UI_config_dict["MainMenu"]["rects"]["start_button"][0]) 
-        #pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.UI_config_dict["MainMenu"]["rects"]["exit_button"][0]) 
-        #pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.UI_config_dict["MainMenu"]["rects"]["settings_button"][0]) 
-        
-        #UI
-        self.gameDisplay.blit(self.UI_config_dict["MainMenu"]["text"]["start_button"][0], (int(100), int(self.config_dict["window"]["window_height"]/2-300)))
-        self.gameDisplay.blit(self.UI_config_dict["MainMenu"]["text"]["settings_button"][0], (int(100), int(self.config_dict["window"]["window_height"]/2-87)))
-        self.gameDisplay.blit(self.UI_config_dict["MainMenu"]["text"]["exit_button"][0], (int(100), int(self.config_dict["window"]["window_height"]/2+125)))
+        pygame.display.update()
     
     def GameMenu(self):
         
-        if self.config_dict["variables"]["main"]["temp_first_frame_of_new_menu"] == True:
-            self.GameMenu_drawer()
-            
-            pygame.display.update()
-    
-    def GameMenu_drawer(self):
-        
-        #background
-        self.gameDisplay.blit(self.UI_config_dict["GameMenu"]["images"]["wallpaper"][0], (0, 0))
-        
-        #debugging
-        #pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.UI_config_dict["GameMenu"]["rects"]["play_button"][0])
-        #pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.UI_config_dict["GameMenu"]["rects"]["exit_button"][0])
-        #pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.UI_config_dict["GameMenu"]["rects"]["settings_button"][0])
-        
-        #UI
-        self.gameDisplay.blit(self.UI_config_dict["GameMenu"]["text"]["play_button"][0], (int(self.config_dict["window"]["window_width"]/2-125), int(self.config_dict["window"]["window_height"]/2-300)))
-        self.gameDisplay.blit(self.UI_config_dict["GameMenu"]["text"]["settings_button"][0], (int(self.config_dict["window"]["window_width"]/2-225), int(self.config_dict["window"]["window_height"]/2-125)))
-        self.gameDisplay.blit(self.UI_config_dict["GameMenu"]["text"]["exit_button"][0], (int(self.config_dict["window"]["window_width"]/2-125), int(self.config_dict["window"]["window_height"]/2+25)))
-        
-    def game(self):
-        
-        self.game_drawer()
+        self.UI_drawer()
         
         pygame.display.update()
-
-    def game_drawer(self):
-         
-        #background
-        self.gameDisplay.blit(self.UI_config_dict["Game"]["images"]["wallpaper"][0], (0, 0))
-
-        #floor
-        pygame.draw.rect(self.gameDisplay, (16, 89, 15), self.UI_config_dict["Game"]["rects"]["grass"][0])
-        pygame.draw.rect(self.gameDisplay, (150, 85, 6), self.UI_config_dict["Game"]["rects"]["dirt"][0])
-
-        #for ground
-        pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.UI_config_dict["Game"]["rects"]["leafs"][0])
-        pygame.draw.rect(self.gameDisplay, (122, 84, 38), self.UI_config_dict["Game"]["rects"]["tree2"][0])
-        pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.UI_config_dict["Game"]["rects"]["leafs2"][0])
-        pygame.draw.rect(self.gameDisplay, (122, 84, 38), self.UI_config_dict["Game"]["rects"]["tree"][0])
-        pygame.draw.rect(self.gameDisplay, (107, 58, 22), self.UI_config_dict["Game"]["rects"]["wall"][0])
-        
-        #debugging 
-        #pygame.draw.rect(self.gameDisplay, self.config_dict["colors"]["green"], self.UI_config_dict["Game"]["rects"]["player"][0])      #enable for player collider
-        
-        #player
-        self.gameDisplay.blit(self.UI_config_dict["Game"]["images"]["player"][0], (int(self.config_dict["window"]["window_width"]/2-32), int(self.config_dict["window"]["window_height"]/2-32)))
-
-        #UI
-        pygame.draw.rect(self.gameDisplay, (33, 33, 33), self.UI_config_dict["Game"]["rects"]["test"][0])
         
 class FullScreen:
     def __init__(self, config_dict):

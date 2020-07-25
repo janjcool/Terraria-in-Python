@@ -19,7 +19,7 @@ class events_dict:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                     # 1 is left, 2 is middle, 3 is right mouse button.
                     if event.button == 1:
-                        if self.config_dict["window"]["display_choser"] == "game":
+                        if self.config_dict["window"]["display_choser"] == "Game":
                             # `event.pos` is the mouse position.
                             if self.UI_config_dict["Game"]["rects"]["test_rect"][0].collidepoint(event.pos):
                                 self.config_dict["variables"]["general"]["event_dict"]['test'] = True
