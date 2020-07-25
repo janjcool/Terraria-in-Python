@@ -1,6 +1,6 @@
 class movement:
-    def __init__(self, config_rects_game, config_dict):
-        self.config_rects_game = config_rects_game
+    def __init__(self, UI_config_dict, config_dict):
+        self.UI_config_dict = UI_config_dict
         self.config_dict = config_dict
         
         self.gravity_movement_allow = True
@@ -18,6 +18,14 @@ class movement:
         self.temp_jump = 0
         self.player_x = 0
         self.player_y = 0
+        self.solid_moverect_list = []
+        self.unsolid_moverect_list = []
+        
+        for x in UI_config_dict["Game"]["rects"]:
+            if UI_config_dict["Game"]["rects"][str(x)][4] == 0:
+                self.unsolid_moverect_list.append(UI_config_dict["Game"]["rects"][str(x)][0])
+            elif UI_config_dict["Game"]["rects"][str(x)][4] == 1:
+                self.solid_moverect_list.append(UI_config_dict["Game"]["rects"][str(x)][0])
         
         self.main()
     
@@ -55,22 +63,22 @@ class movement:
             
         #calculate crouching
         if self.config_dict["variables"]["playerController"]["temp_player_crouching"] == True:
-            self.config_rects_game.player_rect.height += 32
-            self.config_rects_game.player_rect.top -= 32
+            self.UI_config_dict["Game"]["rects"]["player"][0].height += 32
+            self.UI_config_dict["Game"]["rects"]["player"][0].top -= 32
             
         
         if self.config_dict["variables"]["playerController"]["ctrl_down"]:
-            self.config_rects_game.player_rect.height -= 32
-            self.config_rects_game.player_rect.top += 32
+            self.UI_config_dict["Game"]["rects"]["player"][0].height -= 32
+            self.UI_config_dict["Game"]["rects"]["player"][0].top += 32
             self.player_crouching = True
             self.config_dict["variables"]["playerController"]["temp_player_crouching"] = True
         else:
             self.config_dict["variables"]["playerController"]["temp_player_crouching"] = False
         
         #look if player is on the ground
-        for rects in self.config_rects_game.solid_moverect_list:
+        for rects in self.solid_moverect_list:
             rects.top -= 1
-            if self.config_rects_game.player_rect.colliderect(rects) == True:
+            if self.UI_config_dict["Game"]["rects"]["player"][0].colliderect(rects) == True:
                 self.player_on_the_ground = True
             rects.top += 1
         
@@ -89,39 +97,39 @@ class movement:
                     self.jumping = True
         
         #look if you can jump
-        for rects in self.config_rects_game.solid_moverect_list:
+        for rects in self.solid_moverect_list:
             rects.top += self.temp_jump
-            if self.config_rects_game.player_rect.colliderect(rects) == True:
+            if self.UI_config_dict["Game"]["rects"]["player"][0].colliderect(rects) == True:
                 self.jump_movement_allow = False
             rects.top -= self.temp_jump
 
         #add jump
         if self.jump_movement_allow == True:
-            for rects in self.config_rects_game.solid_moverect_list:
+            for rects in self.solid_moverect_list:
                 rects.top += self.temp_jump
-            for rects in self.config_rects_game.unsolid_moverect_list:
+            for rects in self.unsolid_moverect_list:
                 rects.top += self.temp_jump
         
         if self.jumping != True:  
             #look if you can add gravity
-            for rects in self.config_rects_game.solid_moverect_list:
+            for rects in self.solid_moverect_list:
                 rects.top -= self.config_dict["world"]["gravity"]
-                if self.config_rects_game.player_rect.colliderect(rects) == True:
+                if self.UI_config_dict["Game"]["rects"]["player"][0].colliderect(rects) == True:
                     self.gravity_movement_allow = False
                 rects.top += self.config_dict["world"]["gravity"]
 
             #add gravity
             if self.gravity_movement_allow == True:
-                for rects in self.config_rects_game.solid_moverect_list:
+                for rects in self.solid_moverect_list:
                     rects.top -= self.config_dict["world"]["gravity"]
-                for rects in self.config_rects_game.unsolid_moverect_list:
+                for rects in self.unsolid_moverect_list:
                     rects.top -= self.config_dict["world"]["gravity"]
         
         #look if you can add button movement
-        for rect in self.config_rects_game.solid_moverect_list:
+        for rect in self.solid_moverect_list:
             rect.top -= self.player_y
             rect.left -= self.player_x
-            if self.config_rects_game.player_rect.colliderect(rect) == True:
+            if self.UI_config_dict["Game"]["rects"]["player"][0].colliderect(rect) == True:
                 self.player_movement_allow = False
             rect.top += self.player_y
             rect.left += self.player_x
@@ -129,10 +137,10 @@ class movement:
         #add button movement
         if self.player_x != 0 or self.player_y != 0:
             if self.player_movement_allow == True:
-                for rect in self.config_rects_game.solid_moverect_list:
+                for rect in self.solid_moverect_list:
                     rect.top -= self.player_y
                     rect.left -= self.player_x
-                for rect in self.config_rects_game.unsolid_moverect_list:
+                for rect in self.unsolid_moverect_list:
                     rect.top -= self.player_y
                     rect.left -= self.player_x
                 
@@ -142,29 +150,29 @@ class movement:
                 self.player_running_to_left = True
         
         #look if you can add 1 pixel down
-        for rects in self.config_rects_game.solid_moverect_list:
+        for rects in self.solid_moverect_list:
             rects.top -= 1
-            if self.config_rects_game.player_rect.colliderect(rects) == True:
+            if self.UI_config_dict["Game"]["rects"]["player"][0].colliderect(rects) == True:
                 self.one_pixel_movement_allow = False
             rects.top += 1
 
         #add 1 pixel down
         if self.gravity_movement_allow != True:
             if self.one_pixel_movement_allow == True:
-                for rects in self.config_rects_game.solid_moverect_list:
+                for rects in self.solid_moverect_list:
                     rects.top -= 1
-                for rects in self.config_rects_game.unsolid_moverect_list:
+                for rects in self.unsolid_moverect_list:
                     rects.top -= 1
         
         #look if your in a Block
-        for rect in self.config_rects_game.solid_moverect_list:
-            if self.config_rects_game.player_rect.colliderect(rect) == True:
+        for rect in self.solid_moverect_list:
+            if self.UI_config_dict["Game"]["rects"]["player"][0].colliderect(rect) == True:
                 self.in_block = True
         
         #push you up if your stuck in a Block
         if self.in_block == True:
             print("stuck")
-            for rect in self.config_rects_game.solid_moverect_list:
+            for rect in self.solid_moverect_list:
                 rect.top += self.config_dict["world"]["gravity"]
-            for rect in self.config_rects_game.unsolid_moverect_list:
+            for rect in self.unsolid_moverect_list:
                 rect.top += self.config_dict["world"]["gravity"]

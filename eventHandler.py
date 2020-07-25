@@ -1,8 +1,8 @@
 import pygame
 
 class events_dict:
-    def __init__(self, config_rects, config_dict):
-        self.config_rects = config_rects
+    def __init__(self, UI_config_dict, config_dict):
+        self.UI_config_dict = UI_config_dict
         self.config_dict = config_dict
         self.config_dict["variables"]["general"]["event_dict"] = {}
         
@@ -21,21 +21,21 @@ class events_dict:
                     if event.button == 1:
                         if self.config_dict["window"]["display_choser"] == "game":
                             # `event.pos` is the mouse position.
-                            if self.config_rects.test_rect.collidepoint(event.pos):
+                            if self.UI_config_dict["Game"]["rects"]["test_rect"][0].collidepoint(event.pos):
                                 self.config_dict["variables"]["general"]["event_dict"]['test'] = True
                                 
                         if self.config_dict["window"]["display_choser"] == "MainMenu":
-                            if self.config_rects.start_button.collidepoint(event.pos):
+                            if self.UI_config_dict["MainMenu"]["rects"]["start_button"][0].collidepoint(event.pos):
                                 self.config_dict["variables"]["general"]["event_dict"]['start button'] = True
-                            if self.config_rects.exit_button.collidepoint(event.pos):
+                            elif self.UI_config_dict["MainMenu"]["rects"]["exit_button"][0].collidepoint(event.pos):
                                 self.config_dict["variables"]["general"]["event_dict"]['exit'] = True
-                            if self.config_rects.settings_button.collidepoint(event.pos):
+                            elif self.UI_config_dict["MainMenu"]["rects"]["settings_button"][0].collidepoint(event.pos):
                                 self.config_dict["variables"]["general"]["event_dict"]['settings'] = True
                                 
                         if self.config_dict["window"]["display_choser"] == "GameMenu":
-                            if self.config_rects.game_button.collidepoint(event.pos):
+                            if self.UI_config_dict["GameMenu"]["rects"]["play_button"][0].collidepoint(event.pos):
                                 self.config_dict["variables"]["general"]["event_dict"]['game button'] = True
-                            if self.config_rects.mainMenu_button.collidepoint(event.pos):
+                            elif self.UI_config_dict["GameMenu"]["rects"]["exit_button"][0].collidepoint(event.pos):
                                 self.config_dict["variables"]["general"]["event_dict"]['MainMenu button'] = True
                             
             elif event.type == pygame.KEYDOWN:

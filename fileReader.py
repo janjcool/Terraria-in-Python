@@ -1,9 +1,10 @@
 import configparser
 import miscellaneous as misc
-import pprint
+import pygame
 
 
 def config(display_info):
+    #this is a function that reads the config files
     files = ("config.ini", "entity_variables.ini", "template.ini")
     config_dict = {}
     variables = {}
@@ -60,7 +61,8 @@ def config(display_info):
     return config_dict
 
 def UI_config_file(config_dict):
-    files = ("mainMenu", "game", "gameMenu", "optionsMenu", "worldGen")
+    #this is a function that reads the UI config files
+    files = ("MainMenu", "Game", "GameMenu", "OptionsMenu", "WorldGen")
     UI_config_dict = {}
     
     for i in files:
@@ -82,7 +84,30 @@ def UI_config_file(config_dict):
             dictionary[str(x)] = temp_dictionary
         UI_config_dict[str(i)] = dictionary
         
-    pp = pprint.PrettyPrinter(indent=4)
-    pp.pprint(UI_config_dict)
+    UI_config_dict = UI_config_converter(config_dict, UI_config_dict)
+    
+    return UI_config_dict
+
+def UI_config_converter(config_dict, UI_config_dict):
+    #this is a function that converts the UI_config dictionary to pygame rects
+    
+    for i in UI_config_dict:
+        for x in UI_config_dict[str(i)]:
+            if x == "images":
+                for y in UI_config_dict[str(i)][str(x)]:
+                    temp_image = pygame.image.load(str(UI_config_dict[str(i)][str(x)][str(y)][2]))
+                    temp_image = pygame.transform.scale(temp_image, (UI_config_dict[str(i)][str(x)][str(y)][5], UI_config_dict[str(i)][str(x)][str(y)][6]))
+                    UI_config_dict[str(i)][str(x)][str(y)].insert(0, temp_image)
+            elif x == "rects":
+                for y in UI_config_dict[str(i)][str(x)]:
+                    temp_rect = pygame.Rect(UI_config_dict[str(i)][str(x)][str(y)][0], UI_config_dict[str(i)][str(x)][str(y)][1], UI_config_dict[str(i)][str(x)][str(y)][2], UI_config_dict[str(i)][str(x)][str(y)][3])
+                    UI_config_dict[str(i)][str(x)][str(y)].insert(0, temp_rect)
+                    del UI_config_dict[str(i)][str(x)][str(y)][1:5]
+            elif x == "text":
+                for y in UI_config_dict[str(i)][str(x)]:
+                    temp_text = pygame.font.Font(str(UI_config_dict[str(i)][str(x)][str(y)][2]), UI_config_dict[str(i)][str(x)][str(y)][3]).render(str(UI_config_dict[str(i)][str(x)][str(y)][4]), True, config_dict["colors"][str(UI_config_dict[str(i)][str(x)][str(y)][5])])
+                    UI_config_dict[str(i)][str(x)][str(y)].insert(0, temp_text)
+            else:
+                print("one of the sections in a UI config file is wrong (this is how to wrong sections was write: " + str(x) + ")")
     
     return UI_config_dict
