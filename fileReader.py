@@ -72,24 +72,36 @@ def UI_config_file(config_dict):
         
         for x in config.sections():
             temp_dictionary = {}
-            
-            if x == "options":
-                for y in config[str(x)]:
-                    temp_dictionary[str(y)] = misc.string_to_X(config_dict, config[str(x)][str(y)])
-            else:
-                for y in config[str(x)]:
-                    temp_list = []
-                    for k in config[str(x)][str(y)].split(", "):
-                        k = misc.string_to_X(config_dict, k)
-                        temp_list.append(k)
-                        
-                    temp_dictionary[str(y)] = temp_list
+            for y in config[str(x)]:
+                temp_list = []
+                for k in config[str(x)][str(y)].split(", "):
+                    k = misc.string_to_X(config_dict, k)
+                    temp_list.append(k)
+                    
+                temp_dictionary[str(y)] = UI_config_list_to_dictionary(temp_list, x, i)
             dictionary[str(x)] = temp_dictionary
         UI_config_dict[str(i)] = dictionary
         
     UI_config_dict = UI_config_converter(config_dict, UI_config_dict)
     
     return UI_config_dict
+
+def UI_config_list_to_dictionary(UI_list, section, menu):
+    UI_dict = {}
+    
+    if section == "images":
+        UI_dict["type of render original"], UI_dict["depth level"], UI_dict["image file loc"], UI_dict["x"], UI_dict["y"], UI_dict["width"], UI_dict["height"] = UI_list
+    elif section == "rects":
+        if menu == "Game":
+            UI_dict["x"], UI_dict["y"], UI_dict["width"], UI_dict["height"], UI_dict["type of render original"], UI_dict["depth level"], UI_dict["color"], UI_dict["solid state"] = UI_list
+        else:
+            UI_dict["x"], UI_dict["y"], UI_dict["width"], UI_dict["height"], UI_dict["type of render original"], UI_dict["depth level"], UI_dict["color"] = UI_list
+    elif section == "text":
+        UI_dict["type of render original"], UI_dict["depth level"], UI_dict["font file loc"], UI_dict["font size"], UI_dict["text"], UI_dict["color"], UI_dict["x"], UI_dict["y"] = UI_list
+    
+    UI_dict["type of render"] = UI_dict["type of render original"]
+    
+    return UI_dict
 
 def UI_config_converter(config_dict, UI_config_dict):
     #this is a function that converts the UI_config dictionary to pygame rects
@@ -98,20 +110,17 @@ def UI_config_converter(config_dict, UI_config_dict):
         for x in UI_config_dict[str(i)]:
             if x == "images":
                 for y in UI_config_dict[str(i)][str(x)]:
-                    temp_image = pygame.image.load(str(UI_config_dict[str(i)][str(x)][str(y)][2]))
-                    temp_image = pygame.transform.scale(temp_image, (UI_config_dict[str(i)][str(x)][str(y)][5], UI_config_dict[str(i)][str(x)][str(y)][6]))
-                    UI_config_dict[str(i)][str(x)][str(y)].insert(0, temp_image)
+                    temp_image = pygame.image.load(str(UI_config_dict[str(i)][str(x)][str(y)]["image file loc"]))
+                    temp_image = pygame.transform.scale(temp_image, (UI_config_dict[str(i)][str(x)][str(y)]["width"], UI_config_dict[str(i)][str(x)][str(y)]["height"]))
+                    UI_config_dict[str(i)][str(x)][str(y)]["pygame object"] = temp_image
             elif x == "rects":
                 for y in UI_config_dict[str(i)][str(x)]:
-                    temp_rect = pygame.Rect(UI_config_dict[str(i)][str(x)][str(y)][0], UI_config_dict[str(i)][str(x)][str(y)][1], UI_config_dict[str(i)][str(x)][str(y)][2], UI_config_dict[str(i)][str(x)][str(y)][3])
-                    UI_config_dict[str(i)][str(x)][str(y)].insert(0, temp_rect)
-                    del UI_config_dict[str(i)][str(x)][str(y)][1:5]
+                    temp_rect = pygame.Rect(UI_config_dict[str(i)][str(x)][str(y)]["x"], UI_config_dict[str(i)][str(x)][str(y)]["y"], UI_config_dict[str(i)][str(x)][str(y)]["width"], UI_config_dict[str(i)][str(x)][str(y)]["height"])
+                    UI_config_dict[str(i)][str(x)][str(y)]["pygame object"] = temp_rect
             elif x == "text":
                 for y in UI_config_dict[str(i)][str(x)]:
-                    temp_text = pygame.font.Font(str(UI_config_dict[str(i)][str(x)][str(y)][2]), UI_config_dict[str(i)][str(x)][str(y)][3]).render(str(UI_config_dict[str(i)][str(x)][str(y)][4]), True, config_dict["colors"][str(UI_config_dict[str(i)][str(x)][str(y)][5])])
-                    UI_config_dict[str(i)][str(x)][str(y)].insert(0, temp_text)
-            elif x == "options":
-                pass
+                    temp_text = pygame.font.Font(str(UI_config_dict[str(i)][str(x)][str(y)]["font file loc"]), UI_config_dict[str(i)][str(x)][str(y)]["font size"]).render(str(UI_config_dict[str(i)][str(x)][str(y)]["text"]), True, config_dict["colors"][str(UI_config_dict[str(i)][str(x)][str(y)]["color"])])
+                    UI_config_dict[str(i)][str(x)][str(y)]["pygame object"] = temp_text
             else:
                 print("one of the sections in a UI config file is wrong (this is how to wrong sections was write: " + str(x) + ")")
     

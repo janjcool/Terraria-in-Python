@@ -11,39 +11,38 @@ class renderer:
         for x in self.UI_config_dict[self.config_dict["window"]["display_choser"]]:
             if x == "images":
                 for y in self.UI_config_dict[self.config_dict["window"]["display_choser"]][x]:
-                    if self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] == 1:
-                        self.gameDisplay.blit(self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][0],
-                                              (self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][4], 
-                                               self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][5]))
-                        self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] = 0
+                    if self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["type of render"] == 1:
+                        self.gameDisplay.blit(self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["pygame object"],
+                                              (self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["x"], 
+                                               self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["y"]))
+                        self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["type of render"] = 0
             elif x == "rects":
                 for y in self.UI_config_dict[self.config_dict["window"]["display_choser"]][x]:
-                    if self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] == 1:
-                        print(self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][3])
+                    if self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["type of render"] == 1:
                         pygame.draw.rect(self.gameDisplay,
-                                         self.config_dict["colors"][self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][3]],
-                                         self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][0])
-                        self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] = 0
+                                         self.config_dict["colors"][self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["color"]],
+                                         self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["pygame object"])
+                        self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["type of render"] = 0
             elif x == "text":
                 for y in self.UI_config_dict[self.config_dict["window"]["display_choser"]][x]:
-                    if self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] == 1:
-                        self.gameDisplay.blit(self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][0],
-                                              (self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][7], 
-                                               self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][8]))
-                        self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] = 0
+                    if self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["type of render"] == 1:
+                        self.gameDisplay.blit(self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["pygame object"],
+                                              (self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["x"], 
+                                               self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["y"]))
+                        self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["type of render"] = 0
             
-            if not x == "options":
-                if self.UI_config_dict[self.config_dict["window"]["display_choser"]]["options"]["firstframe"] == True:
-                    for y in self.UI_config_dict[self.config_dict["window"]["display_choser"]][x]:
-                        self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y][1] = 0
+            if self.config_dict["variables"]["main"]["firstframe"] == True:
+                for y in self.UI_config_dict[self.config_dict["window"]["display_choser"]][x]:
+                    self.UI_config_dict[self.config_dict["window"]["display_choser"]][x][y]["type of render"] = 0
+                self.config_dict["variables"]["main"]["firstframe"] = False
     
-    def UI_redraw(self, window_type = None):
+    def reset_render_type(self, window_type = None):
         if window_type is None:
             window_type = self.config_dict["window"]["display_choser"]
         
         for x in self.UI_config_dict[window_type]:
             for y in self.UI_config_dict[window_type][x]:
-                self.UI_config_dict[window_type][x][y][1] = 1
+                self.UI_config_dict[window_type][x][y]["type of render"] = self.UI_config_dict[window_type][x][y]["type of render original"]
     
     def MainMenu(self):
         

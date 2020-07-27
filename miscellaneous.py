@@ -2,10 +2,11 @@ def exit():
     print("exit")
     quit()
 
-def menuManager(config_dict, menu_type = "NO INPUT"):
+def menuManager(config_dict, UI_config_dict, menu_type = "NO INPUT"):
     #this is a function that changes the menu
+    UI_config_dict["renderer class"].reset_render_type()
+    config_dict["variables"]["main"]["firstframe"] = True
     print("go to " + str(menu_type))
-    config_dict["variables"]["main"]["first_frame_of_new_menu"] = True
     config_dict["window"]["display_choser"] = str(menu_type)
 
 def isfloat(x):

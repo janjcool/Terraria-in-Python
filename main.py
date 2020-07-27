@@ -28,7 +28,7 @@ def main():
 
     gameDisplay = pygame.display.set_mode((config_dict["window"]["window_width"], config_dict["window"]["window_height"]), flags=pygame.NOFRAME, depth=0, display=config_dict["window"]["display"]) #(size), flags, depth, display
     pygame.display.set_caption(config_dict["window"]["screen_title"])
-    renderer_class = display.renderer(gameDisplay, config_dict, UI_config_dict)
+    UI_config_dict["renderer class"] = display.renderer(gameDisplay, config_dict, UI_config_dict)
     clock = pygame.time.Clock()
 
     while config_dict["variables"]["main"]["mainloop"]:
@@ -38,32 +38,23 @@ def main():
         #=======================================================================================================================================================================================#
         if config_dict["window"]["display_choser"] == "MainMenu":
 
-            #get if this is the first frame in temp_first_frame_of_new_menu
-            config_dict["variables"]["main"]["temp_first_frame_of_new_menu"] = config_dict["variables"]["main"]["first_frame_of_new_menu"]
-            config_dict["variables"]["main"]["first_frame_of_new_menu"] = False
-                
-
             #event class
             eventHandler.events_dict(UI_config_dict, config_dict)
 
             #UI
-            ButtonController_class.mainMenu(config_dict)
+            ButtonController_class.mainMenu(config_dict, UI_config_dict)
 
             #render
-            renderer_class.MainMenu()
+            UI_config_dict["renderer class"].MainMenu()
 
         #=======================================================================================================================================================================================#
         elif config_dict["window"]["display_choser"] == "Game":
 
-            #get if this is the first frame in temp_first_frame_of_new_menu
-            config_dict["variables"]["main"]["temp_first_frame_of_new_menu"] = config_dict["variables"]["main"]["first_frame_of_new_menu"]
-            config_dict["variables"]["main"]["first_frame_of_new_menu"] = False
-
             #event class
             eventHandler.events_dict(UI_config_dict, config_dict)
 
             #UI
-            ButtonController_class.game(config_dict)
+            ButtonController_class.game(config_dict, UI_config_dict)
 
             if ButtonController_class.testPressed:
                 print("start test button")
@@ -81,24 +72,23 @@ def main():
             UI_config_dict["Game"]["images"]["player"][0] = player_animation_chooser_class.player_sprite
 
             #render
-            renderer_class.Game()
+            UI_config_dict["renderer class"].Game()
 
         #=======================================================================================================================================================================================#
         elif config_dict["window"]["display_choser"] == "GameMenu":
-
-            #get if this is the first frame in temp_first_frame_of_new_menu
-            config_dict["variables"]["main"]["temp_first_frame_of_new_menu"] = config_dict["variables"]["main"]["first_frame_of_new_menu"]
-            config_dict["variables"]["main"]["first_frame_of_new_menu"] = False
 
             #event class
             eventHandler.events_dict(UI_config_dict, config_dict)
 
             #UI
-            ButtonController_class.gameMenu(config_dict)
+            ButtonController_class.gameMenu(config_dict, UI_config_dict)
 
             #render
-            renderer_class.GameMenu()
+            UI_config_dict["renderer class"].GameMenu()
 
+        #=======================================================================================================================================================================================#
+        elif config_dict["window"]["display_choser"] == "MainMenuSettings":
+            pass
         #=======================================================================================================================================================================================#
         else:
             print('config_dict["window"]["display_choser"] string not supported: ' + str(config_dict["window"]["display_choser"]) + ' (types that are supported: Game, MainMenu, GameMenu)')
