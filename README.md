@@ -1,6 +1,5 @@
 # Terraria in Python
-##learning
-
+## learning
 This was a project to learn python. Overall I learned a lot but, the project was a mess with bad code and if I would want to continue I would need to rewrite almost everything if not everything.
 
 ## Links
